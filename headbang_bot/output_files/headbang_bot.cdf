@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("C:/Users/thoma/OneDrive/Documenten/Headbang-bot/headbang_bot/output_files/") File("headbang_bot.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE115F29) Path("C:/Users/thoma/OneDrive/Documenten/GitHub/Headbang-bot/headbang_bot/output_files/") File("headbang_bot.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

@@ -47,9 +47,6 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_Y2 -to CLOCK_50
 set_location_assignment PIN_AG14 -to CLOCK2_50
 set_location_assignment PIN_AG15 -to CLOCK3_50
@@ -86,16 +83,6 @@ set_location_assignment PIN_M23 -to KEY[0]
 set_location_assignment PIN_M21 -to KEY[1]
 set_location_assignment PIN_N21 -to KEY[2]
 set_location_assignment PIN_R24 -to KEY[3]
-set_location_assignment PIN_AB28 -to SW[0]
-set_location_assignment PIN_AC28 -to SW[1]
-set_location_assignment PIN_AC27 -to SW[2]
-set_location_assignment PIN_AD27 -to SW[3]
-set_location_assignment PIN_AB27 -to SW[4]
-set_location_assignment PIN_AC26 -to SW[5]
-set_location_assignment PIN_AD26 -to SW[6]
-set_location_assignment PIN_AB26 -to SW[7]
-set_location_assignment PIN_AC25 -to SW[8]
-set_location_assignment PIN_AB25 -to SW[9]
 set_location_assignment PIN_AC24 -to SW[10]
 set_location_assignment PIN_AB24 -to SW[11]
 set_location_assignment PIN_AB23 -to SW[12]
@@ -450,7 +437,6 @@ set_location_assignment PIN_AC10 -to FL_WE_N
 set_location_assignment PIN_AE11 -to FL_RESET_N
 set_location_assignment PIN_AE12 -to FL_WP_N
 set_location_assignment PIN_Y1 -to FL_RY
-set_location_assignment PIN_AC15 -to GPIO[1]
 set_location_assignment PIN_AB21 -to GPIO[2]
 set_location_assignment PIN_Y17 -to GPIO[3]
 set_location_assignment PIN_AC21 -to GPIO[4]
@@ -575,9 +561,29 @@ set_location_assignment PIN_F14 -to EXT_IO[4]
 set_location_assignment PIN_E10 -to EXT_IO[5]
 set_location_assignment PIN_D9 -to EXT_IO[6]
 set_location_assignment PIN_AB22 -to PWM
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name VHDL_FILE servo_controller.vhd
-set_global_assignment -name VHDL_FILE servo.vhd
-set_global_assignment -name VHDL_FILE servo_prescaler.vhd
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
+set_global_assignment -name VHDL_FILE servo.vhd
+set_global_assignment -name VHDL_FILE servo_prescaler.vhd
+set_global_assignment -name VHDL_FILE bpm_hex.vhd
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name VHDL_FILE servo_controller.vhd
+set_global_assignment -name VHDL_FILE test.vhd
+set_location_assignment PIN_AC15 -to servo
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_AC28 -to bpm[1]
+set_location_assignment PIN_AC27 -to bpm[2]
+set_location_assignment PIN_AD27 -to bpm[3]
+set_location_assignment PIN_AB27 -to bpm[4]
+set_location_assignment PIN_AC26 -to bpm[5]
+set_location_assignment PIN_AD26 -to bpm[6]
+set_location_assignment PIN_AB28 -to bpm[0]
+set_location_assignment PIN_AB26 -to BPM[7]
+set_location_assignment PIN_AC25 -to BPM[8]
+set_location_assignment PIN_AB25 -to BPM[9]
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
