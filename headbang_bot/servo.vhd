@@ -9,11 +9,23 @@ entity servo is
 		servo: out std_logic;
 		HEX0: out std_logic_vector(0 to 6);
 		HEX1: out std_logic_vector(0 to 6);
-		HEX2: out std_logic_vector(0 to 6)
+		HEX2: out std_logic_vector(0 to 6);
+		
+		-- sram
+		SRAM_DQ		: inout std_logic_vector(15 downto 0);
+		SRAM_UB_N	: out std_logic;
+		SRAM_LB_N	: out std_logic;
+		SRAM_CE_N	: out std_logic;
+		SRAM_OE_N	: out std_logic;
+		SRAM_WE_N	: out std_logic;
+		SRAM_ADDR	: out std_logic_vector(15 downto 0)
 	);
 end entity servo;
 
 architecture prescaled_servo of servo is
+
+
+
 	component servo_prescaler is
 		port(clki: in std_logic;
 			  freq: in std_logic_vector(9 downto 0);
@@ -42,6 +54,7 @@ architecture prescaled_servo of servo is
 	signal direction: integer := 0;
 	signal clk_bpm: std_logic := '0';
 begin
+	sram: sram_controller port map ();
 	sp: servo_prescaler port map(CLOCK_50, bpm, clk_bpm);
 	sc: servo_controller port map(CLOCK_50, direction, servo);
 	hx: bpm_hex port map(bpm, HEX0, HEX1, HEX2);
