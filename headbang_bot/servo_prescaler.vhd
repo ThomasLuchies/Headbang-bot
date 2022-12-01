@@ -9,7 +9,7 @@ entity servo_prescaler is
 	);
 	port(
 		clki: in std_logic;
-		freq: in std_logic_vector(9 downto 0);
+		freq: in std_logic_vector(19 downto 0);
 		clko: out std_logic
 	);
 end entity;
