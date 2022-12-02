@@ -48,7 +48,7 @@ begin
 				clko <= '0';
 			end if;
 			
-			if counter > 20 then
+			if counter > 40 then
 				counter := 0;
 			end if;
 		end if;

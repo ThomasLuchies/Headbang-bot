@@ -29,11 +29,9 @@ end entity servo;
 
 architecture prescaled_servo of servo is
 
-
-
 	component servo_prescaler is
 		port(clki: in std_logic;
-			  freq: in std_logic_vector(9 downto 0);
+			  freq: in std_logic_vector(19 downto 0);
 			  clko: out std_logic);
 	end component;
 	
@@ -55,9 +53,9 @@ architecture prescaled_servo of servo is
 			  HEX2: out std_logic_vector(0 to 6)
 		);
 	end component;
-	
-	signal direction: integer := 0;
+
 	signal clk_bpm: std_logic := '0';
+	signal direction: integer := 0;
 	
 begin
 
@@ -76,20 +74,29 @@ begin
 		lb_n					=> SRAM_LB_N
 	);
 
-	sp: servo_prescaler port map(CLOCK_50, bpm, clk_bpm);
+	sp: servo_prescaler port map(CLOCK_50, std_logic_vector(signed(bpm) * 100), clk_bpm);
 	sc: servo_controller port map(CLOCK_50, direction, servo);
 	hx: bpm_hex port map(bpm, HEX0, HEX1, HEX2);
 	
 	process(clk_bpm)
 		variable counter : integer := 0;
+		variable directionp: integer := 0;
+		variable servop: integer := 0;
 	begin 
 		if rising_edge(clk_bpm) then
-			if counter > 2 then
+			if counter > 200 then
 				counter := 0;
 			end if;
-				
+			
 			counter := counter + 1;
-			direction <= counter;
+			
+			if counter = 1 then
+				directionp := 1;
+			elsif counter = 101 then
+				directionp := 2;
+			end if;
+			
+			direction <= directionp;
 		end if;
 	end process;
 end architecture;
