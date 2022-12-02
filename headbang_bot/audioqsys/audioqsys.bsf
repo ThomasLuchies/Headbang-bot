@@ -4,9 +4,9 @@ editor if you plan to continue editing the block that represents it in
 the Block Editor! File corruption is VERY likely to occur.
 */
 /*
-Copyright (C) 2021  Intel Corporation. All rights reserved.
+Copyright (C) 2018  Intel Corporation. All rights reserved.
 Your use of Intel Corporation's design tools, logic functions 
-and other software and tools, and any partner logic 
+and other software and tools, and its AMPP partner logic 
 functions, and any output files from any of the foregoing 
 (including device programming or simulation files), and any 
 associated documentation or information are expressly subject 
@@ -16,14 +16,13 @@ the Intel FPGA IP License Agreement, or other applicable license
 agreement, including, without limitation, that your use is for
 the sole purpose of programming logic devices manufactured by
 Intel and sold by Intel or its authorized distributors.  Please
-refer to the applicable agreement for further details, at
-https://fpgasoftware.intel.com/eula.
+refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.1"))
 (symbol
-	(rect 0 0 336 288)
+	(rect 0 0 336 456)
 	(text "audioqsys" (rect 139 -1 179 11)(font "Arial" (font_size 10)))
-	(text "inst" (rect 8 272 20 284)(font "Arial" ))
+	(text "inst" (rect 8 440 20 452)(font "Arial" ))
 	(port
 		(pt 0 72)
 		(input)
@@ -80,6 +79,69 @@ https://fpgasoftware.intel.com/eula.
 		(text "leds_export[17..0]" (rect 4 205 112 216)(font "Arial" (font_size 8)))
 		(line (pt 0 216)(pt 128 216)(line_width 3))
 	)
+	(port
+		(pt 0 296)
+		(output)
+		(text "sdram_addr[12..0]" (rect 0 0 73 12)(font "Arial" (font_size 8)))
+		(text "sdram_addr[12..0]" (rect 4 285 106 296)(font "Arial" (font_size 8)))
+		(line (pt 0 296)(pt 128 296)(line_width 3))
+	)
+	(port
+		(pt 0 312)
+		(output)
+		(text "sdram_ba[1..0]" (rect 0 0 60 12)(font "Arial" (font_size 8)))
+		(text "sdram_ba[1..0]" (rect 4 301 88 312)(font "Arial" (font_size 8)))
+		(line (pt 0 312)(pt 128 312)(line_width 3))
+	)
+	(port
+		(pt 0 328)
+		(output)
+		(text "sdram_cas_n" (rect 0 0 56 12)(font "Arial" (font_size 8)))
+		(text "sdram_cas_n" (rect 4 317 70 328)(font "Arial" (font_size 8)))
+		(line (pt 0 328)(pt 128 328)(line_width 1))
+	)
+	(port
+		(pt 0 344)
+		(output)
+		(text "sdram_cke" (rect 0 0 46 12)(font "Arial" (font_size 8)))
+		(text "sdram_cke" (rect 4 333 58 344)(font "Arial" (font_size 8)))
+		(line (pt 0 344)(pt 128 344)(line_width 1))
+	)
+	(port
+		(pt 0 360)
+		(output)
+		(text "sdram_cs_n" (rect 0 0 51 12)(font "Arial" (font_size 8)))
+		(text "sdram_cs_n" (rect 4 349 64 360)(font "Arial" (font_size 8)))
+		(line (pt 0 360)(pt 128 360)(line_width 1))
+	)
+	(port
+		(pt 0 392)
+		(output)
+		(text "sdram_dqm[3..0]" (rect 0 0 69 12)(font "Arial" (font_size 8)))
+		(text "sdram_dqm[3..0]" (rect 4 381 94 392)(font "Arial" (font_size 8)))
+		(line (pt 0 392)(pt 128 392)(line_width 3))
+	)
+	(port
+		(pt 0 408)
+		(output)
+		(text "sdram_ras_n" (rect 0 0 55 12)(font "Arial" (font_size 8)))
+		(text "sdram_ras_n" (rect 4 397 70 408)(font "Arial" (font_size 8)))
+		(line (pt 0 408)(pt 128 408)(line_width 1))
+	)
+	(port
+		(pt 0 424)
+		(output)
+		(text "sdram_we_n" (rect 0 0 53 12)(font "Arial" (font_size 8)))
+		(text "sdram_we_n" (rect 4 413 64 424)(font "Arial" (font_size 8)))
+		(line (pt 0 424)(pt 128 424)(line_width 1))
+	)
+	(port
+		(pt 0 376)
+		(bidir)
+		(text "sdram_dq[31..0]" (rect 0 0 64 12)(font "Arial" (font_size 8)))
+		(text "sdram_dq[31..0]" (rect 4 365 94 376)(font "Arial" (font_size 8)))
+		(line (pt 0 376)(pt 128 376)(line_width 3))
+	)
 	(drawing
 		(text "audio" (rect 98 43 226 99)(font "Arial" (color 128 0 0)(font_size 9)))
 		(text "ADCDAT" (rect 133 67 302 144)(font "Arial" (color 0 0 0)))
@@ -93,11 +155,21 @@ https://fpgasoftware.intel.com/eula.
 		(text "export" (rect 133 211 302 432)(font "Arial" (color 0 0 0)))
 		(text "switches" (rect 78 227 204 467)(font "Arial" (color 128 0 0)(font_size 9)))
 		(text "export" (rect 133 251 302 512)(font "Arial" (color 0 0 0)))
-		(text " audioqsys " (rect 290 272 646 554)(font "Arial" ))
+		(text "sdram" (rect 92 267 214 547)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "addr" (rect 133 291 290 592)(font "Arial" (color 0 0 0)))
+		(text "ba" (rect 133 307 278 624)(font "Arial" (color 0 0 0)))
+		(text "cas_n" (rect 133 323 296 656)(font "Arial" (color 0 0 0)))
+		(text "cke" (rect 133 339 284 688)(font "Arial" (color 0 0 0)))
+		(text "cs_n" (rect 133 355 290 720)(font "Arial" (color 0 0 0)))
+		(text "dq" (rect 133 371 278 752)(font "Arial" (color 0 0 0)))
+		(text "dqm" (rect 133 387 284 784)(font "Arial" (color 0 0 0)))
+		(text "ras_n" (rect 133 403 296 816)(font "Arial" (color 0 0 0)))
+		(text "we_n" (rect 133 419 290 848)(font "Arial" (color 0 0 0)))
+		(text " system " (rect 301 440 650 890)(font "Arial" ))
 		(line (pt 128 32)(pt 208 32)(line_width 1))
-		(line (pt 208 32)(pt 208 272)(line_width 1))
-		(line (pt 128 272)(pt 208 272)(line_width 1))
-		(line (pt 128 32)(pt 128 272)(line_width 1))
+		(line (pt 208 32)(pt 208 440)(line_width 1))
+		(line (pt 128 440)(pt 208 440)(line_width 1))
+		(line (pt 128 32)(pt 128 440)(line_width 1))
 		(line (pt 129 52)(pt 129 140)(line_width 1))
 		(line (pt 130 52)(pt 130 140)(line_width 1))
 		(line (pt 129 156)(pt 129 180)(line_width 1))
@@ -106,9 +178,11 @@ https://fpgasoftware.intel.com/eula.
 		(line (pt 130 196)(pt 130 220)(line_width 1))
 		(line (pt 129 236)(pt 129 260)(line_width 1))
 		(line (pt 130 236)(pt 130 260)(line_width 1))
+		(line (pt 129 276)(pt 129 428)(line_width 1))
+		(line (pt 130 276)(pt 130 428)(line_width 1))
 		(line (pt 0 0)(pt 336 0)(line_width 1))
-		(line (pt 336 0)(pt 336 288)(line_width 1))
-		(line (pt 0 288)(pt 336 288)(line_width 1))
-		(line (pt 0 0)(pt 0 288)(line_width 1))
+		(line (pt 336 0)(pt 336 456)(line_width 1))
+		(line (pt 0 456)(pt 336 456)(line_width 1))
+		(line (pt 0 0)(pt 0 456)(line_width 1))
 	)
 )

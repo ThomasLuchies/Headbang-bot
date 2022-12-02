@@ -570,7 +570,14 @@ set_location_assignment PIN_D9 -to EXT_IO[6]
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name QSYS_FILE audioqsys.qsys
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VHDL_FILE audioqsys/synthesis/audioqsys.vhd
+set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
+set_global_assignment -name VHDL_FILE sdram_pll.vhd
+set_global_assignment -name QIP_FILE sdram_pll.qip
 set_global_assignment -name VHDL_FILE test.vhd
 set_global_assignment -name VHDL_FILE sram_user_control.vhd
 set_global_assignment -name VHDL_FILE sram_controller.vhd
@@ -579,6 +586,4 @@ set_global_assignment -name VHDL_FILE servo_controller.vhd
 set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
 set_global_assignment -name VHDL_FILE bpm_hex.vhd
 set_global_assignment -name VHDL_FILE headbang_bot.vhd
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -9,7 +9,6 @@ entity servo_controller is
 	);
 	port(clki: in std_logic;
 		  direction: in integer;
-		  enabled: in std_logic;
 		  clko: out std_logic
     );
 end entity;

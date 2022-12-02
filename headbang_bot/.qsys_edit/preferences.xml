@@ -8,7 +8,11 @@
   </columns>
  </systemtable>
  <library
-   expandedCategories="Library/University Program/Clock,Library,Library/Interface Protocols,Library/University Program/Audio &amp; Video,Project,Library/Interface Protocols/Audio &amp; Video,Library/University Program" />
- <window width="1936" height="1056" x="-8" y="-8" />
- <generation synthesis="VHDL" simulation="VHDL" />
+   expandedCategories="Library/Memory Interfaces and Controllers,Library,Library/Memory Interfaces and Controllers/SDRAM,Project" />
+ <window width="2576" height="1408" x="-8" y="-8" />
+ <generation
+   synthesis="VHDL"
+   simulation="VHDL"
+   block_symbol_file="0"
+   path="_PROJECT_NAME_" />
 </preferences>

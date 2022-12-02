@@ -32,6 +32,7 @@ DEFINE rst_controller                          ./libraries/rst_controller/
 DEFINE irq_mapper                              ./libraries/irq_mapper/                             
 DEFINE mm_interconnect_0                       ./libraries/mm_interconnect_0/                      
 DEFINE switches                                ./libraries/switches/                               
+DEFINE sdram                                   ./libraries/sdram/                                  
 DEFINE onchip_memory2                          ./libraries/onchip_memory2/                         
 DEFINE nios2_gen2                              ./libraries/nios2_gen2/                             
 DEFINE leds                                    ./libraries/leds/                                   

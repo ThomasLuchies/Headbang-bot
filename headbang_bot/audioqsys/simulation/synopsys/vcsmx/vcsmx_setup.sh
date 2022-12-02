@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 21.1 842 win32 2022.12.02.11:29:22
+# ACDS 18.1 625 win32 2022.12.02.14:24:13
 
 # ----------------------------------------
 # vcsmx - auto-generated simulation script
@@ -107,12 +107,12 @@
 # within the Quartus project, and generate a unified
 # script which supports all the Altera IP within the design.
 # ----------------------------------------
-# ACDS 21.1 842 win32 2022.12.02.11:29:22
+# ACDS 18.1 625 win32 2022.12.02.14:24:13
 # ----------------------------------------
 # initialize variables
 TOP_LEVEL_NAME="audioqsys"
 QSYS_SIMDIR="./../../"
-QUARTUS_INSTALL_DIR="C:/intelfpga_lite/21.1/quartus/"
+QUARTUS_INSTALL_DIR="C:/intelfpga_lite/18.1/quartus/"
 SKIP_FILE_COPY=0
 SKIP_DEV_COM=0
 SKIP_COM=0
@@ -170,6 +170,7 @@ mkdir -p ./libraries/rst_controller/
 mkdir -p ./libraries/irq_mapper/
 mkdir -p ./libraries/mm_interconnect_0/
 mkdir -p ./libraries/switches/
+mkdir -p ./libraries/sdram/
 mkdir -p ./libraries/onchip_memory2/
 mkdir -p ./libraries/nios2_gen2/
 mkdir -p ./libraries/leds/
@@ -265,6 +266,7 @@ if [ $SKIP_COM -eq 0 ]; then
   vlogan +v2k -sverilog $USER_DEFINED_VERILOG_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS "$QSYS_SIMDIR/submodules/audioqsys_irq_mapper.sv"                                          -work irq_mapper                             
   vlogan +v2k $USER_DEFINED_VERILOG_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS           "$QSYS_SIMDIR/submodules/audioqsys_mm_interconnect_0.v"                                    -work mm_interconnect_0                      
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_switches.vhd"                                           -work switches                               
+  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_sdram.vhd"                                              -work sdram                                  
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_onchip_memory2.vhd"                                     -work onchip_memory2                         
   vlogan +v2k $USER_DEFINED_VERILOG_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS           "$QSYS_SIMDIR/submodules/audioqsys_nios2_gen2.v"                                           -work nios2_gen2                             
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_leds.vhd"                                               -work leds                                   
