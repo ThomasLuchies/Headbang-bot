@@ -11,61 +11,39 @@ port
 	SW	: in std_logic_vector(17 downto 0);
 	LEDR : out std_logic_vector(17 downto 0);
 
-	-- sram_controller pins
-	data 				: inout std_logic_vector(15 downto 0);
-	address 			: out std_logic_vector(19 downto 0);
-	output_enable 		: out std_logic := '1';
-	write_enable		: buffer std_logic := '0';
-	chip_select			: out std_logic := '1';
-	ub					: out std_logic := '0';
-	lb					: out std_logic := '0'
-)
+	-- sram_controller side
+	data 					: inout std_logic_vector(15 downto 0);
+	address 				: out std_logic_vector(19 downto 0);
+	output_enable_n 	: out std_logic := '0';
+	write_enable_n		: buffer std_logic := '1';
+	chip_select_n		: out std_logic := '1';
+	ub_n					: out std_logic := '0';
+	lb_n					: out std_logic := '0'
+);
 end entity;
 
-architecture rtl of sram_user_control is
-
-	read_or_write 	: std_logic := 0; -- read = 0, write = 1
-
-begin
+architecture rtl of sram_user_control is begin
 
 	sram_controller : entity work.sram_controller port map
 	(
-		clk				=> clk,
-		reset				=> not KEY(1),
-		read_or_write	=> not KEY(0),
-		data_input		=> SW(15 downto 0),
-		addr_input		=> (others => '0'),
-		address			=> data,
-		output_enable	=> address,
-		write_enable	=> output_enable,
-		chip_select		=> chip_select,
-		ub					=> ub,
-		lb					=> lb
+		clk					=> clk,
+		reset_n				=> KEY(1),
+		
+		-- schematic side
+		read_write_n		=> KEY(0),
+		data_input			=> SW(15 downto 0),
+		addr_input			=> (others => '0'), -- hardcoded to first address (0x0000)
+		data_output			=> LEDR(15 downto 0),
+		
+		-- sram side
+		address				=> address,
+		output_enable_n	=> output_enable_n,
+		write_enable_n		=> write_enable_n,
+		chip_select_n		=> chip_select_n,
+		ub_n					=> ub_n,
+		lb_n					=> lb_n
 	);
 	
-	process (clk, KEY(1)) begin
-	
-		if KEY(1) = '0' then
-		
-			LEDR <= (others => '0');
-			reset <= '1';
-		
-		elsif rising_edge(clk) then
-		
-			reset <= '0';
-		
-			if KEY(0) = '0' then -- write
-			
-				
-			
-			else
-
-				-- read
-			
-			end if;
-		
-		end if;
-	
-	end process;
+	LEDR(17 downto 16) <= (others => '0');
 
 end architecture;

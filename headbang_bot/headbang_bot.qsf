@@ -570,16 +570,16 @@ set_location_assignment PIN_AC15 -to servo
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_location_assignment PIN_AC28 -to bpm[1]
-set_location_assignment PIN_AC27 -to bpm[2]
-set_location_assignment PIN_AD27 -to bpm[3]
-set_location_assignment PIN_AB27 -to bpm[4]
-set_location_assignment PIN_AC26 -to bpm[5]
-set_location_assignment PIN_AD26 -to bpm[6]
-set_location_assignment PIN_AB28 -to bpm[0]
-set_location_assignment PIN_AB26 -to BPM[7]
-set_location_assignment PIN_AC25 -to BPM[8]
-set_location_assignment PIN_AB25 -to BPM[9]
+set_location_assignment PIN_AC28 -to bpm[1] -disable
+set_location_assignment PIN_AC27 -to bpm[2] -disable
+set_location_assignment PIN_AD27 -to bpm[3] -disable
+set_location_assignment PIN_AB27 -to bpm[4] -disable
+set_location_assignment PIN_AC26 -to bpm[5] -disable
+set_location_assignment PIN_AD26 -to bpm[6] -disable
+set_location_assignment PIN_AB28 -to bpm[0] -disable
+set_location_assignment PIN_AB26 -to BPM[7] -disable
+set_location_assignment PIN_AC25 -to BPM[8] -disable
+set_location_assignment PIN_AB25 -to BPM[9] -disable
 set_global_assignment -name VHDL_FILE sram_controller.vhd
 set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
 set_global_assignment -name VHDL_FILE servo.vhd
@@ -587,5 +587,17 @@ set_global_assignment -name VHDL_FILE servo_prescaler.vhd
 set_global_assignment -name VHDL_FILE bpm_hex.vhd
 set_global_assignment -name VHDL_FILE servo_controller.vhd
 set_global_assignment -name VHDL_FILE test.vhd
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name VHDL_FILE sram_user_control.vhd
+set_location_assignment PIN_AB28 -to SW[0]
+set_location_assignment PIN_AC28 -to SW[1]
+set_location_assignment PIN_AC27 -to SW[2]
+set_location_assignment PIN_AD27 -to SW[3]
+set_location_assignment PIN_AB27 -to SW[4]
+set_location_assignment PIN_AC26 -to SW[5]
+set_location_assignment PIN_AD26 -to SW[6]
+set_location_assignment PIN_AB26 -to SW[7]
+set_location_assignment PIN_AC25 -to SW[8]
+set_location_assignment PIN_AB25 -to SW[9]
+set_location_assignment PIN_AB22 -to GPIO[0]
+set_location_assignment PIN_AC15 -to GPIO[1]
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
