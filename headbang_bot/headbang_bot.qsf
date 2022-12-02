@@ -38,10 +38,10 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY servo
+set_global_assignment -name TOP_LEVEL_ENTITY niosaudio
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:43:01  NOVEMBER 17, 2022"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -563,19 +563,10 @@ set_location_assignment PIN_D9 -to EXT_IO[6]
 set_location_assignment PIN_AB22 -to PWM
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
-set_global_assignment -name VHDL_FILE servo.vhd
-set_global_assignment -name VHDL_FILE servo_prescaler.vhd
-set_global_assignment -name VHDL_FILE bpm_hex.vhd
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-set_global_assignment -name VHDL_FILE servo_controller.vhd
-set_global_assignment -name VHDL_FILE test.vhd
 set_location_assignment PIN_AC15 -to servo
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_AC28 -to bpm[1]
 set_location_assignment PIN_AC27 -to bpm[2]
 set_location_assignment PIN_AD27 -to bpm[3]
@@ -586,4 +577,16 @@ set_location_assignment PIN_AB28 -to bpm[0]
 set_location_assignment PIN_AB26 -to BPM[7]
 set_location_assignment PIN_AC25 -to BPM[8]
 set_location_assignment PIN_AB25 -to BPM[9]
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name SIP_FILE audioqsys/simulation/audioqsys.sip
+set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
+set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
+set_global_assignment -name VHDL_FILE servo.vhd
+set_global_assignment -name VHDL_FILE servo_prescaler.vhd
+set_global_assignment -name VHDL_FILE bpm_hex.vhd
+set_global_assignment -name VHDL_FILE servo_controller.vhd
+set_global_assignment -name VHDL_FILE test.vhd
+set_global_assignment -name VHDL_FILE niosaudio.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

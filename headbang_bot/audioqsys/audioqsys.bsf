@@ -1,0 +1,114 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2021  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 336 288)
+	(text "audioqsys" (rect 139 -1 179 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 272 20 284)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "audio_ADCDAT" (rect 0 0 69 12)(font "Arial" (font_size 8)))
+		(text "audio_ADCDAT" (rect 4 61 76 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 128 72)(line_width 1))
+	)
+	(port
+		(pt 0 88)
+		(input)
+		(text "audio_ADCLRCK" (rect 0 0 76 12)(font "Arial" (font_size 8)))
+		(text "audio_ADCLRCK" (rect 4 77 82 88)(font "Arial" (font_size 8)))
+		(line (pt 0 88)(pt 128 88)(line_width 1))
+	)
+	(port
+		(pt 0 104)
+		(input)
+		(text "audio_BCLK" (rect 0 0 51 12)(font "Arial" (font_size 8)))
+		(text "audio_BCLK" (rect 4 93 64 104)(font "Arial" (font_size 8)))
+		(line (pt 0 104)(pt 128 104)(line_width 1))
+	)
+	(port
+		(pt 0 136)
+		(input)
+		(text "audio_DACLRCK" (rect 0 0 76 12)(font "Arial" (font_size 8)))
+		(text "audio_DACLRCK" (rect 4 125 82 136)(font "Arial" (font_size 8)))
+		(line (pt 0 136)(pt 128 136)(line_width 1))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "clk_clk" (rect 0 0 27 12)(font "Arial" (font_size 8)))
+		(text "clk_clk" (rect 4 165 46 176)(font "Arial" (font_size 8)))
+		(line (pt 0 176)(pt 128 176)(line_width 1))
+	)
+	(port
+		(pt 0 256)
+		(input)
+		(text "switches_export[17..0]" (rect 0 0 87 12)(font "Arial" (font_size 8)))
+		(text "switches_export[17..0]" (rect 4 245 136 256)(font "Arial" (font_size 8)))
+		(line (pt 0 256)(pt 128 256)(line_width 3))
+	)
+	(port
+		(pt 0 120)
+		(output)
+		(text "audio_DACDAT" (rect 0 0 69 12)(font "Arial" (font_size 8)))
+		(text "audio_DACDAT" (rect 4 109 76 120)(font "Arial" (font_size 8)))
+		(line (pt 0 120)(pt 128 120)(line_width 1))
+	)
+	(port
+		(pt 0 216)
+		(output)
+		(text "leds_export[17..0]" (rect 0 0 69 12)(font "Arial" (font_size 8)))
+		(text "leds_export[17..0]" (rect 4 205 112 216)(font "Arial" (font_size 8)))
+		(line (pt 0 216)(pt 128 216)(line_width 3))
+	)
+	(drawing
+		(text "audio" (rect 98 43 226 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "ADCDAT" (rect 133 67 302 144)(font "Arial" (color 0 0 0)))
+		(text "ADCLRCK" (rect 133 83 308 176)(font "Arial" (color 0 0 0)))
+		(text "BCLK" (rect 133 99 290 208)(font "Arial" (color 0 0 0)))
+		(text "DACDAT" (rect 133 115 302 240)(font "Arial" (color 0 0 0)))
+		(text "DACLRCK" (rect 133 131 308 272)(font "Arial" (color 0 0 0)))
+		(text "clk" (rect 113 147 244 307)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 133 171 284 352)(font "Arial" (color 0 0 0)))
+		(text "leds" (rect 105 187 234 387)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 211 302 432)(font "Arial" (color 0 0 0)))
+		(text "switches" (rect 78 227 204 467)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 251 302 512)(font "Arial" (color 0 0 0)))
+		(text " audioqsys " (rect 290 272 646 554)(font "Arial" ))
+		(line (pt 128 32)(pt 208 32)(line_width 1))
+		(line (pt 208 32)(pt 208 272)(line_width 1))
+		(line (pt 128 272)(pt 208 272)(line_width 1))
+		(line (pt 128 32)(pt 128 272)(line_width 1))
+		(line (pt 129 52)(pt 129 140)(line_width 1))
+		(line (pt 130 52)(pt 130 140)(line_width 1))
+		(line (pt 129 156)(pt 129 180)(line_width 1))
+		(line (pt 130 156)(pt 130 180)(line_width 1))
+		(line (pt 129 196)(pt 129 220)(line_width 1))
+		(line (pt 130 196)(pt 130 220)(line_width 1))
+		(line (pt 129 236)(pt 129 260)(line_width 1))
+		(line (pt 130 236)(pt 130 260)(line_width 1))
+		(line (pt 0 0)(pt 336 0)(line_width 1))
+		(line (pt 336 0)(pt 336 288)(line_width 1))
+		(line (pt 0 288)(pt 336 288)(line_width 1))
+		(line (pt 0 0)(pt 0 288)(line_width 1))
+	)
+)
