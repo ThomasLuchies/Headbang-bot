@@ -46,9 +46,9 @@ begin
 	sram_user_control: entity work.sram_user_control port map
 	(
 		clk => CLOCK_50,
-		key => KEY,
-		sw => SW,
-		ledr => LEDR,
+		key => (others => '0'), -- KEY,
+		sw => (others => '0'), -- SW,
+		-- ledr => LEDR,
 		data => SRAM_DQ,
 		address => SRAM_ADDR,
 		output_enable_n => SRAM_OE_N,
@@ -67,7 +67,7 @@ begin
 	audio_qsys: entity work.audioqsys port map
 	(
 		clk_clk => CLOCK_50,
-		-- leds_export => LEDR,
+		leds_export => LEDR,
 		switches_export => SW,
 		audio_ADCDAT => AUD_ADCDAT,
 		audio_ADCLRCK => AUD_ADCLRCK,
