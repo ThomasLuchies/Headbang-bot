@@ -12,23 +12,23 @@ entity headbang_bot is port
 	
 	-- display
 	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6);
-	LEDR 	: out std_logic_vector(17 downto 0);
+	LEDR : out std_logic_vector(17 downto 0);
 	
 	-- user control
-	SW 	: in std_logic_vector(17 downto 0);
-	KEY 	: in std_logic_vector(3 downto 0);
+	SW : in std_logic_vector(17 downto 0);
+	KEY : in std_logic_vector(3 downto 0);
 	
 	-- sram
-	SRAM_DQ		: inout std_logic_vector(15 downto 0);
+	SRAM_DQ : inout std_logic_vector(15 downto 0);
 	SRAM_UB_N, SRAM_LB_N, SRAM_CE_N,	SRAM_OE_N, SRAM_WE_N	: out std_logic;
-	SRAM_ADDR	: out std_logic_vector(19 downto 0);
+	SRAM_ADDR : out std_logic_vector(19 downto 0);
 	
 	-- sdram
 	DRAM_CLK, DRAM_CAS_N, DRAM_CKE, DRAM_CS_N, DRAM_RAS_N, DRAM_WE_N : out std_logic;
-	DRAM_ADDR	: out std_logic_vector(12 downto 0);
-	DRAM_BA     : out std_logic_vector(1 downto 0);
-	DRAM_DQ    	: inout std_logic_vector(31 downto 0);
-	DRAM_DQM   	: out std_logic_vector(3 downto 0);
+	DRAM_ADDR : out std_logic_vector(12 downto 0);
+	DRAM_BA : out std_logic_vector(1 downto 0);
+	DRAM_DQ : inout std_logic_vector(31 downto 0);
+	DRAM_DQM : out std_logic_vector(3 downto 0);
 	
 	-- audio
 	AUD_ADCDAT, AUD_ADCLRCK, AUD_BCLK, AUD_DACLRCK : in std_logic;     
@@ -45,29 +45,29 @@ begin
 
 	sram_user_control: entity work.sram_user_control port map
 	(
-		clk				=> CLOCK_50,
-		KEY 				=> KEY,
-		SW					=> SW,
-		-- LEDR 				=> LEDR,
-		data 				=> SRAM_DQ,
-		address 			=> SRAM_ADDR,
-		output_enable_n 	=> SRAM_OE_N,
-		write_enable_n	=> SRAM_WE_N,
-		chip_select_n		=> SRAM_CE_N,
-		ub_n					=> SRAM_UB_N,
-		lb_n					=> SRAM_LB_N
+		clk => CLOCK_50,
+		key => KEY,
+		sw => SW,
+		ledr => LEDR,
+		data => SRAM_DQ,
+		address => SRAM_ADDR,
+		output_enable_n => SRAM_OE_N,
+		write_enable_n => SRAM_WE_N,
+		chip_select_n => SRAM_CE_N,
+		ub_n => SRAM_UB_N,
+		lb_n => SRAM_LB_N
 	);
 	
 	sdram_pll: entity work.sdram_pll port map
 	(
-		inclk0 	=> CLOCK_50,
-		c0			=> DRAM_CLK
+		inclk0 => CLOCK_50,
+		c0 => DRAM_CLK
 	);
 	
 	audio_qsys: entity work.audioqsys port map
 	(
 		clk_clk => CLOCK_50,
-		leds_export => LEDR,
+		-- leds_export => LEDR,
 		switches_export => SW,
 		audio_ADCDAT => AUD_ADCDAT,
 		audio_ADCLRCK => AUD_ADCLRCK,

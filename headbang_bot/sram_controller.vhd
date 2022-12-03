@@ -2,82 +2,99 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 
-entity sram_controller is
-port
+entity sram_controller is port
 (
-	clk					: in std_logic;
-	reset_n				: in std_logic;
+	clk : in std_logic; -- assumes a speed of 50mHz
 
-	-- Schematic side
-	read_write_n		: in std_logic; -- read = 1, write = 0
-	data_input			: in std_logic_vector(15 downto 0);
-	addr_input			: in std_logic_vector(19 downto 0);
-	data_output			: out std_logic_vector(15 downto 0);
+	-- user side
+	read_n, write_n : in std_logic;
+	data_input : in std_logic_vector(15 downto 0);
+	addr_input : in std_logic_vector(19 downto 0);
+	data_output : out std_logic_vector(15 downto 0);
 	
 	-- SRAM side
-	data					: inout std_logic_vector(15 downto 0);
-	address 				: out std_logic_vector(19 downto 0);
-	output_enable_n 	: out std_logic := '0';
-	write_enable_n		: buffer std_logic := '1';
-	chip_select_n		: out std_logic := '0';
-	ub_n					: out std_logic := '0';
-	lb_n					: out std_logic := '0'
+	data : inout std_logic_vector(15 downto 0);
+	address : out std_logic_vector(19 downto 0);
+	output_enable_n : out std_logic := '1';
+	write_enable_n : buffer std_logic := '1';
+	chip_select_n : out std_logic := '1';
+	ub_n : out std_logic := '0'; -- always active
+	lb_n : out std_logic := '0' -- always active
 );
 end sram_controller;
 
 architecture behavior of sram_controller is
 
-	signal read_write_wait_cycle : std_logic := '0';
+	type execution is (init, clear);
+	signal execution_state : execution := init;
+	signal is_reading, is_writing : std_logic := '0';
 
 begin
 	
-	process (clk, reset_n) begin
-
-		if reset_n = '0' then
-		
-			address <= (others => '0');
-			output_enable_n <= '0';
-			write_enable_n <= '1';
+	process (clk) begin
 			
-		elsif rising_edge(clk) then
+		if rising_edge(clk) then
 		
-			if read_write_wait_cycle = '1' then
+			if (write_n = '0' or is_writing = '1') and is_reading = '0' then -- write
 			
-				if (write_enable_n = '0') then -- wait cycle for write
-		
-					write_enable_n 	<= '1';
+				case execution_state is
+			
+					when init =>
 					
-				else	-- wait cycle for read
+						-- signals
+						address <= addr_input;
+						chip_select_n <= '0';
+						write_enable_n <= '0';
+						data <= data_input;
+						-- state
+						is_writing <= '1';
+						execution_state <= clear;
+						
+					when clear =>
+						
+						-- signals
+						chip_select_n <= '1';
+						write_enable_n <= '1';
+						-- state
+						is_writing <= '0';
+						execution_state <= init;
+					
+				end case;
 				
-					data_output <= data;
-				
-				end if;
-				
-				read_write_wait_cycle <= '0';
+			elsif (read_n = '0' or is_reading = '1') and is_writing = '0' then -- read
 			
+				case execution_state is
+			
+					when init =>
+					
+						-- signals
+						address <= addr_input;
+						chip_select_n <= '0';
+						output_enable_n <= '0';
+						data_output <= data;
+						-- state
+						is_reading <= '1';
+						execution_state <= clear;
+						
+					when clear =>
+					
+						-- signals
+						chip_select_n <= '1';
+						output_enable_n <= '1';
+						-- state
+						is_reading <= '0';
+						execution_state <= init;
+					
+				end case;
+				
 			else
 			
-				if (read_write_n = '1') then -- read
-			
-					address 				<= addr_input;
-					output_enable_n 	<= '0';
-					write_enable_n 	<= '1';
-					
-				else -- prepare write
-				
-					address 				<= addr_input;
-					data				 	<= data_input;
-					write_enable_n  	<= '0';
-					output_enable_n	<= '1';
-
-				end if;
-				
-				read_write_wait_cycle <= '1';
+				data <= (others => 'Z'); -- set signal to high impedance when not writing nor reading
 			
 			end if;
-		
+			
 		end if;
 			
 	end process;
-
+	
 end behavior;
