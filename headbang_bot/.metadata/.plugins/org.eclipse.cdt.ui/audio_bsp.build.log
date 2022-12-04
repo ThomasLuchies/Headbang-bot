@@ -1,6 +1,0 @@
-11:45:43 **** Incremental Build of configuration Nios II for project audio_bsp ****
-wsl make all 
-[BSP build complete]
-
-11:45:43 Build Finished (took 265ms)
-

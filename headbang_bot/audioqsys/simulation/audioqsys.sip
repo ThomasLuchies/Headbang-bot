@@ -1,5 +1,5 @@
 set_global_assignment -entity "audioqsys" -library "lib_audioqsys" -name IP_TOOL_NAME "Qsys"
-set_global_assignment -entity "audioqsys" -library "lib_audioqsys" -name IP_TOOL_VERSION "21.1"
+set_global_assignment -entity "audioqsys" -library "lib_audioqsys" -name IP_TOOL_VERSION "18.1"
 set_global_assignment -entity "audioqsys" -library "lib_audioqsys" -name IP_TOOL_ENV "Qsys"
 set_global_assignment -library "lib_audioqsys" -name SPD_FILE [file join $::quartus(sip_path) "../audioqsys.spd"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "../../audioqsys.qsys"]
@@ -31,6 +31,7 @@ set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::qua
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/altera_merlin_slave_translator.sv"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/altera_merlin_master_translator.sv"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/audioqsys_switches.vhd"]
+set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/audioqsys_sdram.vhd"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/audioqsys_onchip_memory2.hex"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/audioqsys_onchip_memory2.vhd"]
 set_global_assignment -library "lib_audioqsys" -name MISC_FILE [file join $::quartus(sip_path) "submodules/audioqsys_nios2_gen2.v"]

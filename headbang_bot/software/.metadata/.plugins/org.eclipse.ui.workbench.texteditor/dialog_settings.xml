@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="//&#x09;alt_up_audio_dev * audio_dev;" key="selection"/>
+		<list key="findhistory">
+			<item value="//&#x09;alt_up_audio_dev * audio_dev;"/>
+			<item value="alt_up_audio_dev * audio_dev;"/>
+		</list>
+	</section>
+</section>

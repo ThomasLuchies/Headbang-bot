@@ -181,6 +181,10 @@
    type="VHDL"
    library="switches" />
  <file
+   path="simulation/submodules/audioqsys_sdram.vhd"
+   type="VHDL"
+   library="sdram" />
+ <file
    path="simulation/submodules/audioqsys_onchip_memory2.hex"
    type="HEX"
    library="onchip_memory2" />

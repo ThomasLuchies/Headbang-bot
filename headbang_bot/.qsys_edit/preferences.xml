@@ -7,8 +7,11 @@
    <irq preferredWidth="34" />
   </columns>
  </systemtable>
- <library
-   expandedCategories="Library/University Program/Clock,Library,Library/Interface Protocols,Library/University Program/Audio &amp; Video,Project,Library/Interface Protocols/Audio &amp; Video,Library/University Program" />
- <window width="1936" height="1056" x="-8" y="-8" />
- <generation synthesis="VHDL" simulation="VHDL" />
+ <library expandedCategories="Project,Library" />
+ <window width="2560" height="1392" x="0" y="0" />
+ <generation
+   synthesis="VHDL"
+   simulation="VHDL"
+   block_symbol_file="0"
+   path="_PROJECT_NAME_" />
 </preferences>
