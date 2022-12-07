@@ -31,8 +31,9 @@ entity headbang_bot is port
 	DRAM_DQM : out std_logic_vector(3 downto 0);
 	
 	-- audio
-	AUD_ADCDAT, AUD_ADCLRCK, AUD_BCLK, AUD_DACLRCK : in std_logic;     
-	AUD_DACDAT : out std_logic
+	I2C_SCLK, AUD_BCLK, AUD_XCK, AUD_DACLRCK: out std_logic;
+	AUD_DACDAT: out std_logic;
+	I2C_SDAT: inout std_logic
 );
 end entity;
 
@@ -41,7 +42,32 @@ architecture rtl of headbang_bot is
 	signal clk_bpm: std_logic := '0';
 	signal direction: integer := 0;
 	
+	component audio_player is port
+	(
+		clk,reset,SW0: in std_logic;
+		SDIN: inout std_logic;
+		SCLK,USB_clk,BCLK: out std_logic;
+		DAC_LR_CLK: out std_logic;
+		DAC_DATA: out std_logic;
+		ACK_LEDR: out std_logic_vector(2 downto 0)
+	);
+	end component;
+
 begin
+
+	audio: audio_player port map
+	(
+		clk => CLOCK_50,
+		reset => KEY(0),
+		SW0 => SW(0),
+		SDIN => I2C_SDAT,
+		SCLK => I2C_SCLK,
+		USB_clk => AUD_XCK,
+		BCLK => AUD_BCLK,
+		DAC_LR_CLK => AUD_DACLRCK,
+		DAC_DATA => AUD_DACDAT,
+		ACK_LEDR => LEDR(2 downto 0)
+	);
 
 	sram_user_control: entity work.sram_user_control port map
 	(
@@ -64,26 +90,26 @@ begin
 		c0 => DRAM_CLK
 	);
 	
-	audio_qsys: entity work.audioqsys port map
-	(
-		clk_clk => CLOCK_50,
-		leds_export => LEDR,
-		switches_export => SW,
-		audio_ADCDAT => AUD_ADCDAT,
-		audio_ADCLRCK => AUD_ADCLRCK,
-		audio_BCLK => AUD_BCLK,
-		audio_DACDAT => AUD_DACDAT,
-		audio_DACLRCK => AUD_DACLRCK,
-		sdram_addr => DRAM_ADDR,
-		sdram_ba => DRAM_BA,
-		sdram_cas_n => DRAM_CAS_N,
-		sdram_cke => DRAM_CKE,
-		sdram_cs_n => DRAM_CS_N,
-		sdram_dq => DRAM_DQ,
-		sdram_dqm => DRAM_DQM,
-		sdram_ras_n => DRAM_RAS_N,
-		sdram_we_n => DRAM_WE_N
-	);
+--	audio_qsys: entity work.audioqsys port map
+--	(
+--		clk_clk => CLOCK_50,
+--		leds_export => LEDR,
+--		switches_export => SW,
+--		audio_ADCDAT => AUD_ADCDAT,
+--		audio_ADCLRCK => AUD_ADCLRCK,
+--		audio_BCLK => AUD_BCLK,
+--		audio_DACDAT => AUD_DACDAT,
+--		audio_DACLRCK => AUD_DACLRCK,
+--		sdram_addr => DRAM_ADDR,
+--		sdram_ba => DRAM_BA,
+--		sdram_cas_n => DRAM_CAS_N,
+--		sdram_cke => DRAM_CKE,
+--		sdram_cs_n => DRAM_CS_N,
+--		sdram_dq => DRAM_DQ,
+--		sdram_dqm => DRAM_DQM,
+--		sdram_ras_n => DRAM_RAS_N,
+--		sdram_we_n => DRAM_WE_N
+--	);
 
 	sp: entity work.servo_prescaler port map
 	(
