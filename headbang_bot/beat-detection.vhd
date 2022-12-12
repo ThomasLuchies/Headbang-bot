@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity beat_detection is generic
 (
 	TARGET_FREQ: integer := 440;
-	TRESHOLD: integer := 1000; -- determine treshold
+	TRESHOLD: integer := 1000 -- determine treshold
 );
 port
 (
