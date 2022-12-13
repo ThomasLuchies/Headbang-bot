@@ -8,45 +8,34 @@ use IEEE.numeric_std.all;
 
 entity audioqsys is
 	port (
-		audio_ADCDAT    : in    std_logic                     := '0';             --    audio.ADCDAT
-		audio_ADCLRCK   : in    std_logic                     := '0';             --         .ADCLRCK
-		audio_BCLK      : in    std_logic                     := '0';             --         .BCLK
-		audio_DACDAT    : out   std_logic;                                        --         .DACDAT
-		audio_DACLRCK   : in    std_logic                     := '0';             --         .DACLRCK
-		clk_clk         : in    std_logic                     := '0';             --      clk.clk
-		leds_export     : out   std_logic_vector(17 downto 0);                    --     leds.export
-		sdram_addr      : out   std_logic_vector(12 downto 0);                    --    sdram.addr
-		sdram_ba        : out   std_logic_vector(1 downto 0);                     --         .ba
-		sdram_cas_n     : out   std_logic;                                        --         .cas_n
-		sdram_cke       : out   std_logic;                                        --         .cke
-		sdram_cs_n      : out   std_logic;                                        --         .cs_n
-		sdram_dq        : inout std_logic_vector(31 downto 0) := (others => '0'); --         .dq
-		sdram_dqm       : out   std_logic_vector(3 downto 0);                     --         .dqm
-		sdram_ras_n     : out   std_logic;                                        --         .ras_n
-		sdram_we_n      : out   std_logic;                                        --         .we_n
-		switches_export : in    std_logic_vector(17 downto 0) := (others => '0')  -- switches.export
+		adc_data_export   : in    std_logic                     := '0';             --   adc_data.export
+		adc_lr_clk_export : in    std_logic                     := '0';             -- adc_lr_clk.export
+		bclk_export       : in    std_logic                     := '0';             --       bclk.export
+		clk_clk           : in    std_logic                     := '0';             --        clk.clk
+		leds_export       : out   std_logic_vector(17 downto 0);                    --       leds.export
+		sdram_addr        : out   std_logic_vector(12 downto 0);                    --      sdram.addr
+		sdram_ba          : out   std_logic_vector(1 downto 0);                     --           .ba
+		sdram_cas_n       : out   std_logic;                                        --           .cas_n
+		sdram_cke         : out   std_logic;                                        --           .cke
+		sdram_cs_n        : out   std_logic;                                        --           .cs_n
+		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => '0'); --           .dq
+		sdram_dqm         : out   std_logic_vector(3 downto 0);                     --           .dqm
+		sdram_ras_n       : out   std_logic;                                        --           .ras_n
+		sdram_we_n        : out   std_logic;                                        --           .we_n
+		switches_export   : in    std_logic_vector(17 downto 0) := (others => '0')  --   switches.export
 	);
 end entity audioqsys;
 
 architecture rtl of audioqsys is
-	component audioqsys_audio is
+	component audioqsys_ADC_DATA is
 		port (
-			clk         : in  std_logic                     := 'X';             -- clk
-			reset       : in  std_logic                     := 'X';             -- reset
-			address     : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
-			chipselect  : in  std_logic                     := 'X';             -- chipselect
-			read        : in  std_logic                     := 'X';             -- read
-			write       : in  std_logic                     := 'X';             -- write
-			writedata   : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			readdata    : out std_logic_vector(31 downto 0);                    -- readdata
-			irq         : out std_logic;                                        -- irq
-			AUD_ADCDAT  : in  std_logic                     := 'X';             -- export
-			AUD_ADCLRCK : in  std_logic                     := 'X';             -- export
-			AUD_BCLK    : in  std_logic                     := 'X';             -- export
-			AUD_DACDAT  : out std_logic;                                        -- export
-			AUD_DACLRCK : in  std_logic                     := 'X'              -- export
+			clk      : in  std_logic                     := 'X';             -- clk
+			reset_n  : in  std_logic                     := 'X';             -- reset_n
+			address  : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			readdata : out std_logic_vector(31 downto 0);                    -- readdata
+			in_port  : in  std_logic                     := 'X'              -- export
 		);
-	end component audioqsys_audio;
+	end component audioqsys_ADC_DATA;
 
 	component audioqsys_jtag_uart is
 		port (
@@ -174,12 +163,12 @@ architecture rtl of audioqsys is
 			nios2_gen2_instruction_master_waitrequest    : out std_logic;                                        -- waitrequest
 			nios2_gen2_instruction_master_read           : in  std_logic                     := 'X';             -- read
 			nios2_gen2_instruction_master_readdata       : out std_logic_vector(31 downto 0);                    -- readdata
-			audio_avalon_audio_slave_address             : out std_logic_vector(1 downto 0);                     -- address
-			audio_avalon_audio_slave_write               : out std_logic;                                        -- write
-			audio_avalon_audio_slave_read                : out std_logic;                                        -- read
-			audio_avalon_audio_slave_readdata            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
-			audio_avalon_audio_slave_writedata           : out std_logic_vector(31 downto 0);                    -- writedata
-			audio_avalon_audio_slave_chipselect          : out std_logic;                                        -- chipselect
+			ADC_DATA_s1_address                          : out std_logic_vector(1 downto 0);                     -- address
+			ADC_DATA_s1_readdata                         : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			ADC_LR_CLK_s1_address                        : out std_logic_vector(1 downto 0);                     -- address
+			ADC_LR_CLK_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			BCLK_s1_address                              : out std_logic_vector(1 downto 0);                     -- address
+			BCLK_s1_readdata                             : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			jtag_uart_avalon_jtag_slave_address          : out std_logic_vector(0 downto 0);                     -- address
 			jtag_uart_avalon_jtag_slave_write            : out std_logic;                                        -- write
 			jtag_uart_avalon_jtag_slave_read             : out std_logic;                                        -- read
@@ -226,7 +215,6 @@ architecture rtl of audioqsys is
 			clk           : in  std_logic                     := 'X'; -- clk
 			reset         : in  std_logic                     := 'X'; -- reset
 			receiver0_irq : in  std_logic                     := 'X'; -- irq
-			receiver1_irq : in  std_logic                     := 'X'; -- irq
 			sender_irq    : out std_logic_vector(31 downto 0)         -- irq
 		);
 	end component audioqsys_irq_mapper;
@@ -310,12 +298,6 @@ architecture rtl of audioqsys is
 	signal nios2_gen2_instruction_master_waitrequest                     : std_logic;                     -- mm_interconnect_0:nios2_gen2_instruction_master_waitrequest -> nios2_gen2:i_waitrequest
 	signal nios2_gen2_instruction_master_address                         : std_logic_vector(27 downto 0); -- nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
 	signal nios2_gen2_instruction_master_read                            : std_logic;                     -- nios2_gen2:i_read -> mm_interconnect_0:nios2_gen2_instruction_master_read
-	signal mm_interconnect_0_audio_avalon_audio_slave_chipselect         : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_chipselect -> audio:chipselect
-	signal mm_interconnect_0_audio_avalon_audio_slave_readdata           : std_logic_vector(31 downto 0); -- audio:readdata -> mm_interconnect_0:audio_avalon_audio_slave_readdata
-	signal mm_interconnect_0_audio_avalon_audio_slave_address            : std_logic_vector(1 downto 0);  -- mm_interconnect_0:audio_avalon_audio_slave_address -> audio:address
-	signal mm_interconnect_0_audio_avalon_audio_slave_read               : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_read -> audio:read
-	signal mm_interconnect_0_audio_avalon_audio_slave_write              : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_write -> audio:write
-	signal mm_interconnect_0_audio_avalon_audio_slave_writedata          : std_logic_vector(31 downto 0); -- mm_interconnect_0:audio_avalon_audio_slave_writedata -> audio:writedata
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect      : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_readdata        : std_logic_vector(31 downto 0); -- jtag_uart:av_readdata -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_readdata
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest     : std_logic;                     -- jtag_uart:av_waitrequest -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_waitrequest
@@ -354,10 +336,15 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_sdram_s1_readdatavalid                      : std_logic;                     -- sdram:za_valid -> mm_interconnect_0:sdram_s1_readdatavalid
 	signal mm_interconnect_0_sdram_s1_write                              : std_logic;                     -- mm_interconnect_0:sdram_s1_write -> mm_interconnect_0_sdram_s1_write:in
 	signal mm_interconnect_0_sdram_s1_writedata                          : std_logic_vector(31 downto 0); -- mm_interconnect_0:sdram_s1_writedata -> sdram:az_data
-	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- audio:irq -> irq_mapper:receiver0_irq
-	signal irq_mapper_receiver1_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver1_irq
+	signal mm_interconnect_0_adc_lr_clk_s1_readdata                      : std_logic_vector(31 downto 0); -- ADC_LR_CLK:readdata -> mm_interconnect_0:ADC_LR_CLK_s1_readdata
+	signal mm_interconnect_0_adc_lr_clk_s1_address                       : std_logic_vector(1 downto 0);  -- mm_interconnect_0:ADC_LR_CLK_s1_address -> ADC_LR_CLK:address
+	signal mm_interconnect_0_adc_data_s1_readdata                        : std_logic_vector(31 downto 0); -- ADC_DATA:readdata -> mm_interconnect_0:ADC_DATA_s1_readdata
+	signal mm_interconnect_0_adc_data_s1_address                         : std_logic_vector(1 downto 0);  -- mm_interconnect_0:ADC_DATA_s1_address -> ADC_DATA:address
+	signal mm_interconnect_0_bclk_s1_readdata                            : std_logic_vector(31 downto 0); -- BCLK:readdata -> mm_interconnect_0:BCLK_s1_readdata
+	signal mm_interconnect_0_bclk_s1_address                             : std_logic_vector(1 downto 0);  -- mm_interconnect_0:BCLK_s1_address -> BCLK:address
+	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver0_irq
 	signal nios2_gen2_irq_irq                                            : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> nios2_gen2:irq
-	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [audio:reset, irq_mapper:reset, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, onchip_memory2:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
+	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [irq_mapper:reset, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, onchip_memory2:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
 	signal rst_controller_reset_out_reset_req                            : std_logic;                     -- rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read_ports_inv  : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:inv -> jtag_uart:av_read_n
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:inv -> jtag_uart:av_write_n
@@ -365,26 +352,35 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_sdram_s1_read_ports_inv                     : std_logic;                     -- mm_interconnect_0_sdram_s1_read:inv -> sdram:az_rd_n
 	signal mm_interconnect_0_sdram_s1_byteenable_ports_inv               : std_logic_vector(3 downto 0);  -- mm_interconnect_0_sdram_s1_byteenable:inv -> sdram:az_be_n
 	signal mm_interconnect_0_sdram_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_sdram_s1_write:inv -> sdram:az_wr_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [jtag_uart:rst_n, leds:reset_n, nios2_gen2:reset_n, sdram:reset_n, switches:reset_n]
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [ADC_DATA:reset_n, ADC_LR_CLK:reset_n, BCLK:reset_n, jtag_uart:rst_n, leds:reset_n, nios2_gen2:reset_n, sdram:reset_n, switches:reset_n]
 
 begin
 
-	audio : component audioqsys_audio
+	adc_data : component audioqsys_ADC_DATA
 		port map (
-			clk         => clk_clk,                                               --                clk.clk
-			reset       => rst_controller_reset_out_reset,                        --              reset.reset
-			address     => mm_interconnect_0_audio_avalon_audio_slave_address,    -- avalon_audio_slave.address
-			chipselect  => mm_interconnect_0_audio_avalon_audio_slave_chipselect, --                   .chipselect
-			read        => mm_interconnect_0_audio_avalon_audio_slave_read,       --                   .read
-			write       => mm_interconnect_0_audio_avalon_audio_slave_write,      --                   .write
-			writedata   => mm_interconnect_0_audio_avalon_audio_slave_writedata,  --                   .writedata
-			readdata    => mm_interconnect_0_audio_avalon_audio_slave_readdata,   --                   .readdata
-			irq         => irq_mapper_receiver0_irq,                              --          interrupt.irq
-			AUD_ADCDAT  => audio_ADCDAT,                                          -- external_interface.export
-			AUD_ADCLRCK => audio_ADCLRCK,                                         --                   .export
-			AUD_BCLK    => audio_BCLK,                                            --                   .export
-			AUD_DACDAT  => audio_DACDAT,                                          --                   .export
-			AUD_DACLRCK => audio_DACLRCK                                          --                   .export
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_adc_data_s1_address,    --                  s1.address
+			readdata => mm_interconnect_0_adc_data_s1_readdata,   --                    .readdata
+			in_port  => adc_data_export                           -- external_connection.export
+		);
+
+	adc_lr_clk : component audioqsys_ADC_DATA
+		port map (
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_adc_lr_clk_s1_address,  --                  s1.address
+			readdata => mm_interconnect_0_adc_lr_clk_s1_readdata, --                    .readdata
+			in_port  => adc_lr_clk_export                         -- external_connection.export
+		);
+
+	bclk : component audioqsys_ADC_DATA
+		port map (
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_bclk_s1_address,        --                  s1.address
+			readdata => mm_interconnect_0_bclk_s1_readdata,       --                    .readdata
+			in_port  => bclk_export                               -- external_connection.export
 		);
 
 	jtag_uart : component audioqsys_jtag_uart
@@ -398,7 +394,7 @@ begin
 			av_write_n     => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv, --                  .write_n
 			av_writedata   => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,       --                  .writedata
 			av_waitrequest => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest,     --                  .waitrequest
-			av_irq         => irq_mapper_receiver1_irq                                       --               irq.irq
+			av_irq         => irq_mapper_receiver0_irq                                       --               irq.irq
 		);
 
 	leds : component audioqsys_leds
@@ -507,12 +503,12 @@ begin
 			nios2_gen2_instruction_master_waitrequest    => nios2_gen2_instruction_master_waitrequest,                 --                                       .waitrequest
 			nios2_gen2_instruction_master_read           => nios2_gen2_instruction_master_read,                        --                                       .read
 			nios2_gen2_instruction_master_readdata       => nios2_gen2_instruction_master_readdata,                    --                                       .readdata
-			audio_avalon_audio_slave_address             => mm_interconnect_0_audio_avalon_audio_slave_address,        --               audio_avalon_audio_slave.address
-			audio_avalon_audio_slave_write               => mm_interconnect_0_audio_avalon_audio_slave_write,          --                                       .write
-			audio_avalon_audio_slave_read                => mm_interconnect_0_audio_avalon_audio_slave_read,           --                                       .read
-			audio_avalon_audio_slave_readdata            => mm_interconnect_0_audio_avalon_audio_slave_readdata,       --                                       .readdata
-			audio_avalon_audio_slave_writedata           => mm_interconnect_0_audio_avalon_audio_slave_writedata,      --                                       .writedata
-			audio_avalon_audio_slave_chipselect          => mm_interconnect_0_audio_avalon_audio_slave_chipselect,     --                                       .chipselect
+			ADC_DATA_s1_address                          => mm_interconnect_0_adc_data_s1_address,                     --                            ADC_DATA_s1.address
+			ADC_DATA_s1_readdata                         => mm_interconnect_0_adc_data_s1_readdata,                    --                                       .readdata
+			ADC_LR_CLK_s1_address                        => mm_interconnect_0_adc_lr_clk_s1_address,                   --                          ADC_LR_CLK_s1.address
+			ADC_LR_CLK_s1_readdata                       => mm_interconnect_0_adc_lr_clk_s1_readdata,                  --                                       .readdata
+			BCLK_s1_address                              => mm_interconnect_0_bclk_s1_address,                         --                                BCLK_s1.address
+			BCLK_s1_readdata                             => mm_interconnect_0_bclk_s1_readdata,                        --                                       .readdata
 			jtag_uart_avalon_jtag_slave_address          => mm_interconnect_0_jtag_uart_avalon_jtag_slave_address,     --            jtag_uart_avalon_jtag_slave.address
 			jtag_uart_avalon_jtag_slave_write            => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write,       --                                       .write
 			jtag_uart_avalon_jtag_slave_read             => mm_interconnect_0_jtag_uart_avalon_jtag_slave_read,        --                                       .read
@@ -558,7 +554,6 @@ begin
 			clk           => clk_clk,                        --       clk.clk
 			reset         => rst_controller_reset_out_reset, -- clk_reset.reset
 			receiver0_irq => irq_mapper_receiver0_irq,       -- receiver0.irq
-			receiver1_irq => irq_mapper_receiver1_irq,       -- receiver1.irq
 			sender_irq    => nios2_gen2_irq_irq              --    sender.irq
 		);
 

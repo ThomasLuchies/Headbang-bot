@@ -574,9 +574,10 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name SIP_FILE audioqsys/simulation/audioqsys.sip
+set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
 set_global_assignment -name VERILOG_FILE audio_codec.v
 set_global_assignment -name VERILOG_FILE i2c_protocol.v
-set_global_assignment -name VHDL_FILE audioqsys/synthesis/audioqsys.vhd
 set_global_assignment -name VERILOG_FILE USB_Clock_PLL.v
 set_global_assignment -name QIP_FILE USB_Clock_PLL.qip
 set_global_assignment -name VERILOG_FILE Five_Centimeters_Per_Second_ROM.v

@@ -1,23 +1,29 @@
 # # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
 # 
+preplace inst audioqsys.sdram -pg 1 -lvl 3 -y 830
 preplace inst audioqsys.nios2_gen2.clock_bridge -pg 1
-preplace inst audioqsys.onchip_memory2 -pg 1 -lvl 3 -y 410
-preplace inst audioqsys.clk_0 -pg 1 -lvl 2 -y 240
-preplace inst audioqsys.switches -pg 1 -lvl 3 -y 310
+preplace inst audioqsys.ADC_LR_CLK -pg 1 -lvl 3 -y 130
+preplace inst audioqsys.onchip_memory2 -pg 1 -lvl 3 -y 650
+preplace inst audioqsys.clk_0 -pg 1 -lvl 2 -y 370
+preplace inst audioqsys.switches -pg 1 -lvl 3 -y 550
 preplace inst audioqsys.nios2_gen2.cpu -pg 1
 preplace inst audioqsys.nios2_gen2.reset_bridge -pg 1
-preplace inst audioqsys.nios2_gen2 -pg 1 -lvl 1 -y 50
-preplace inst audioqsys.jtag_uart -pg 1 -lvl 3 -y 210
-preplace inst audioqsys.leds -pg 1 -lvl 3 -y 490
+preplace inst audioqsys.nios2_gen2 -pg 1 -lvl 1 -y 170
+preplace inst audioqsys.jtag_uart -pg 1 -lvl 3 -y 350
+preplace inst audioqsys.ADC_DATA -pg 1 -lvl 3 -y 30
+preplace inst audioqsys.leds -pg 1 -lvl 3 -y 730
+preplace inst audioqsys.BCLK -pg 1 -lvl 3 -y 450
 preplace inst audioqsys -pg 1 -lvl 1 -y 40 -regy -20
-preplace inst audioqsys.audio -pg 1 -lvl 3 -y 90
-preplace netloc INTERCONNECT<net_container>audioqsys</net_container>(MASTER)nios2_gen2.instruction_master,(SLAVE)audio.avalon_audio_slave,(SLAVE)switches.s1,(SLAVE)leds.s1,(SLAVE)jtag_uart.avalon_jtag_slave,(MASTER)nios2_gen2.data_master,(SLAVE)nios2_gen2.debug_mem_slave,(SLAVE)onchip_memory2.s1) 1 0 3 130 190 510 100 770
-preplace netloc FAN_OUT<net_container>audioqsys</net_container>(SLAVE)onchip_memory2.clk1,(MASTER)clk_0.clk,(SLAVE)jtag_uart.clk,(SLAVE)switches.clk,(SLAVE)audio.clk,(SLAVE)nios2_gen2.clk,(SLAVE)leds.clk) 1 0 3 90 230 NJ 230 750
-preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.switches,(SLAVE)switches.external_connection) 1 0 3 NJ 340 NJ 340 NJ
-preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.audio,(SLAVE)audio.external_interface) 1 0 3 NJ 210 NJ 160 NJ
-preplace netloc FAN_OUT<net_container>audioqsys</net_container>(MASTER)nios2_gen2.irq,(SLAVE)audio.interrupt,(SLAVE)jtag_uart.irq) 1 1 2 NJ 140 790
-preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.leds,(SLAVE)leds.external_connection) 1 0 3 NJ 520 NJ 520 NJ
-preplace netloc INTERCONNECT<net_container>audioqsys</net_container>(SLAVE)switches.reset,(SLAVE)audio.reset,(MASTER)nios2_gen2.debug_reset_request,(SLAVE)jtag_uart.reset,(MASTER)clk_0.clk_reset,(SLAVE)nios2_gen2.reset,(SLAVE)onchip_memory2.reset1,(SLAVE)clk_0.clk_in_reset,(SLAVE)leds.reset) 1 0 3 110 270 490 120 730
-preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.clk,(SLAVE)clk_0.clk_in) 1 0 2 NJ 250 NJ
-levelinfo -pg 1 0 60 1010
-levelinfo -hier audioqsys 70 250 560 850 1000
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)BCLK.external_connection,(SLAVE)audioqsys.bclk) 1 0 3 NJ 480 NJ 480 NJ
+preplace netloc POINT_TO_POINT<net_container>audioqsys</net_container>(MASTER)nios2_gen2.irq,(SLAVE)jtag_uart.irq) 1 1 2 NJ 260 870
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.switches,(SLAVE)switches.external_connection) 1 0 3 NJ 580 NJ 580 NJ
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)audioqsys.leds,(SLAVE)leds.external_connection) 1 0 3 NJ 760 NJ 760 NJ
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)ADC_DATA.external_connection,(SLAVE)audioqsys.adc_data) 1 0 3 NJ 50 NJ 60 NJ
+preplace netloc FAN_OUT<net_container>audioqsys</net_container>(SLAVE)ADC_LR_CLK.clk,(SLAVE)switches.clk,(SLAVE)ADC_DATA.clk,(SLAVE)leds.clk,(MASTER)clk_0.clk,(SLAVE)jtag_uart.clk,(SLAVE)nios2_gen2.clk,(SLAVE)onchip_memory2.clk1,(SLAVE)sdram.clk,(SLAVE)BCLK.clk) 1 0 3 130 90 NJ 180 830
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)clk_0.clk_in,(SLAVE)audioqsys.clk) 1 0 2 NJ 380 NJ
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)ADC_LR_CLK.external_connection,(SLAVE)audioqsys.adc_lr_clk) 1 0 3 NJ 70 NJ 160 NJ
+preplace netloc INTERCONNECT<net_container>audioqsys</net_container>(MASTER)clk_0.clk_reset,(SLAVE)ADC_DATA.reset,(SLAVE)ADC_LR_CLK.reset,(SLAVE)sdram.reset,(SLAVE)BCLK.reset,(SLAVE)leds.reset,(SLAVE)nios2_gen2.reset,(MASTER)nios2_gen2.debug_reset_request,(SLAVE)onchip_memory2.reset1,(SLAVE)switches.reset,(SLAVE)jtag_uart.reset,(SLAVE)clk_0.clk_in_reset) 1 0 3 110 110 530 440 850
+preplace netloc EXPORT<net_container>audioqsys</net_container>(SLAVE)sdram.wire,(SLAVE)audioqsys.sdram) 1 0 3 NJ 900 NJ 900 NJ
+preplace netloc INTERCONNECT<net_container>audioqsys</net_container>(SLAVE)onchip_memory2.s1,(SLAVE)ADC_DATA.s1,(SLAVE)BCLK.s1,(MASTER)nios2_gen2.data_master,(MASTER)nios2_gen2.instruction_master,(SLAVE)switches.s1,(SLAVE)nios2_gen2.debug_mem_slave,(SLAVE)sdram.s1,(SLAVE)jtag_uart.avalon_jtag_slave,(SLAVE)leds.s1,(SLAVE)ADC_LR_CLK.s1) 1 0 3 150 130 510 240 890
+levelinfo -pg 1 0 80 1130
+levelinfo -hier audioqsys 90 270 660 970 1120
