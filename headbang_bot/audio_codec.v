@@ -38,7 +38,7 @@ USB_Clock_PLL	USB_Clock_PLL_inst
 	.c1(BCLK)
 );
 
-always @(posedge BCLK) begin
+always @(negedge BCLK) begin
 	if(read_enable) begin
 		if (DAC_LR_CLK_counter == 31) DAC_LR_CLK <= 1;
 		else DAC_LR_CLK <= 0;
@@ -51,7 +51,7 @@ always @(posedge BCLK) begin
 	end
 end
 
-always @(posedge BCLK) begin
+always @(negedge BCLK) begin
 	if(read_enable) begin
 		if (ADC_LR_CLK_counter == 31) ADC_LR_CLK <= 1;
 		else ADC_LR_CLK <= 0;
@@ -68,7 +68,7 @@ end
 // generate 6 configuration pulses 
 always @(posedge clk)
 	begin
-	if(!reset) 
+	if(!reset)
 		begin
 		counting_state <= 0;
 		read_enable <= 0;
