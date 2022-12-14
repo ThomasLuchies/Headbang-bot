@@ -4,31 +4,32 @@ use ieee.numeric_std.all;
 
 entity headbang_bot is port
 (
-	CLOCK_50 : in std_logic;
+	CLOCK_50: in std_logic;
 
 	-- servo control
-	BPM : in std_logic_vector(9 downto 0);
-	SERVO : out std_logic;
+	BPM: in std_logic_vector(9 downto 0);
+	SERVO: out std_logic;
 	
 	-- display
 	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6) := (others => '1');
-	LEDR : out std_logic_vector(17 downto 0);
+	LEDR: out std_logic_vector(17 downto 0);
+	LEDG: out std_logic_vector(8 downto 0);
 	
 	-- user control
-	SW : in std_logic_vector(17 downto 0);
-	KEY : in std_logic_vector(3 downto 0);
+	SW: in std_logic_vector(17 downto 0);
+	KEY: in std_logic_vector(3 downto 0);
 	
 	-- sram
-	SRAM_DQ : inout std_logic_vector(15 downto 0);
-	SRAM_UB_N, SRAM_LB_N, SRAM_CE_N,	SRAM_OE_N, SRAM_WE_N	: out std_logic;
-	SRAM_ADDR : out std_logic_vector(19 downto 0);
+	SRAM_DQ: inout std_logic_vector(15 downto 0);
+	SRAM_UB_N, SRAM_LB_N, SRAM_CE_N,	SRAM_OE_N, SRAM_WE_N: out std_logic;
+	SRAM_ADDR: out std_logic_vector(19 downto 0);
 	
 	-- sdram
-	DRAM_CLK, DRAM_CAS_N, DRAM_CKE, DRAM_CS_N, DRAM_RAS_N, DRAM_WE_N : out std_logic;
-	DRAM_ADDR : out std_logic_vector(12 downto 0);
-	DRAM_BA : out std_logic_vector(1 downto 0);
-	DRAM_DQ : inout std_logic_vector(31 downto 0);
-	DRAM_DQM : out std_logic_vector(3 downto 0);
+	DRAM_CLK, DRAM_CAS_N, DRAM_CKE, DRAM_CS_N, DRAM_RAS_N, DRAM_WE_N: out std_logic;
+	DRAM_ADDR: out std_logic_vector(12 downto 0);
+	DRAM_BA: out std_logic_vector(1 downto 0);
+	DRAM_DQ: inout std_logic_vector(31 downto 0);
+	DRAM_DQM: out std_logic_vector(3 downto 0);
 	
 	-- audio
 	I2C_SCLK, AUD_DACDAT, AUD_XCK, AUD_BCLK, AUD_ADCLRCK, AUD_DACLRCK: out std_logic;
@@ -42,6 +43,8 @@ architecture rtl of headbang_bot is
 --	signal clk_bpm: std_logic := '0';
 --	signal direction: integer := 0;
 	signal adc_lr_clk, bclk, dac_data, dac_lr_clk: std_logic;
+	signal audio_channel: std_logic_vector(15 downto 0);
+	signal audio_amplitude: std_logic_vector(25 downto 0);
 		
 	component audio_codec is port
 	(
@@ -85,20 +88,36 @@ architecture rtl of headbang_bot is
 		channels_ready: out std_logic -- only needed for FFT's
 	);
 	end component;
+	
+	component audio_visualiser is port
+	(
+		channel: in std_logic_vector(15 downto 0);
+		amplitude: out std_logic_vector(25 downto 0)
+	);
+	end component;
 
 begin
 
+	LEDR <= audio_amplitude(25 downto 8);
+	LEDG(7 downto 0) <= audio_amplitude(7 downto 0);
+
+	audvis: audio_visualiser port map
+	(
+		channel => audio_channel,
+		amplitude => audio_amplitude
+	);
+	
 	AUD_DACDAT <= dac_data;
 	AUD_BCLK <= bclk;
 	AUD_ADCLRCK <= adc_lr_clk;
 	AUD_DACLRCK <= dac_lr_clk;
-
+	
 	adcbuf: adc_buffer port map
 	(
 		clk => BCLK,
 		data_in => AUD_ADCDAT,
 		reset => adc_lr_clk,
-		first_channel_out => LEDR(15 downto 0)
+		first_channel_out => audio_channel
 		-- last_channel_out => LEDR(17 downto 16)
 	);
 	
