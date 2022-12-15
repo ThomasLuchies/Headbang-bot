@@ -95,8 +95,8 @@ end
 always @(posedge SCLK) begin
 	case(counter) //MUX_input[15:9] register address, MUX_input[8:0] register data
 		0: MUX_input <= 16'h1201; // Activate control
-		1: MUX_input <= 16'h0017; // Left line in
-		2: MUX_input <= 16'h0217; // Right line in
+		1: MUX_input <= 16'h0000; // Left line in
+		2: MUX_input <= 16'h0200; // Right line in
 		3: MUX_input <= 16'h047F; // Left headphone out
 		4: MUX_input <= 16'h067F; // Right headphone out
 		5: MUX_input <= 16'h0812; // Analogue audio path control

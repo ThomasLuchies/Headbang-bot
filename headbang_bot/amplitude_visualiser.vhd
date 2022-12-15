@@ -2,8 +2,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
--- N = 1 downto 26; 10000 + 22768 / (26 / N)
-
 entity audio_visualiser is port
 (
 	channel: in std_logic_vector(15 downto 0);
@@ -12,64 +10,34 @@ entity audio_visualiser is port
 end entity;
 
 architecture rtl of audio_visualiser is
-	signal channel_quantity: integer range 0 to 32768;
+	signal channel_quantity: signed(15 downto 0);
 begin
 	process (channel) begin
-		channel_quantity <= to_integer(unsigned(channel));
+		channel_quantity <= signed(channel);
 		if channel_quantity <= 0 then
 			amplitude <= (others => '0');
-		elsif channel_quantity <= 20000 then
+		elsif channel_quantity <= 1000 then
 			amplitude <= "00000000000000000000000001";
-		elsif channel_quantity <= 10875 then
-			amplitude <= "00000000000000000000000011";
-		elsif channel_quantity <= 11751 then
+		elsif channel_quantity <= 3000 then
 			amplitude <= "00000000000000000000000111";
-		elsif channel_quantity <= 12627 then
+		elsif channel_quantity <= 6000 then
 			amplitude <= "00000000000000000000001111";
-		elsif channel_quantity <= 13502 then
-			amplitude <= "00000000000000000000011111";
-		elsif channel_quantity <= 14378 then
+		elsif channel_quantity <= 9000 then
 			amplitude <= "00000000000000000000111111";
-		elsif channel_quantity <= 15254 then
+		elsif channel_quantity <= 12000 then
 			amplitude <= "00000000000000000001111111";
-		elsif channel_quantity <= 16129 then
-			amplitude <= "00000000000000000011111111";
-		elsif channel_quantity <= 17005 then
+		elsif channel_quantity <= 15000 then
 			amplitude <= "00000000000000000111111111";
-		elsif channel_quantity <= 17881 then
+		elsif channel_quantity <= 18000 then
 			amplitude <= "00000000000000001111111111";
-		elsif channel_quantity <= 18756 then
-			amplitude <= "00000000000000011111111111";
-		elsif channel_quantity <= 19632 then
-			amplitude <= "00000000000000111111111111";
-		elsif channel_quantity <= 20508 then
-			amplitude <= "00000000000001111111111111";
-		elsif channel_quantity <= 21384 then
-			amplitude <= "00000000000011111111111111";
-		elsif channel_quantity <= 22259 then
-			amplitude <= "00000000000111111111111111";
-		elsif channel_quantity <= 23135 then
-			amplitude <= "00000000001111111111111111";
-		elsif channel_quantity <= 24011 then
-			amplitude <= "00000000011111111111111111";
-		elsif channel_quantity <= 24886 then
+		elsif channel_quantity <= 21000 then
 			amplitude <= "00000000111111111111111111";
-		elsif channel_quantity <= 25762 then
-			amplitude <= "00000001111111111111111111";
-		elsif channel_quantity <= 26638 then
+		elsif channel_quantity <= 24000 then
 			amplitude <= "00000011111111111111111111";
-		elsif channel_quantity <= 27513 then
-			amplitude <= "00000111111111111111111111";
-		elsif channel_quantity <= 28389 then
+		elsif channel_quantity <= 27000 then
 			amplitude <= "00001111111111111111111111";
-		elsif channel_quantity <= 29265 then
-			amplitude <= "00011111111111111111111111";
-		elsif channel_quantity <= 30140 then
+		elsif channel_quantity <= 30000 then
 			amplitude <= "00111111111111111111111111";
-		elsif channel_quantity <= 31016 then
-			amplitude <= "01111111111111111111111111";
-		elsif channel_quantity <= 31892 then
-			amplitude <= "11111111111111111111111111";
 		elsif channel_quantity <= 32768 then
 			amplitude <= "11111111111111111111111111";
 		else
