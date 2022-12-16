@@ -100,7 +100,7 @@ always @(posedge SCLK) begin
 		3: MUX_input <= 16'h047F; // Left headphone out
 		4: MUX_input <= 16'h067F; // Right headphone out
 		5: MUX_input <= 16'h0812; // Analogue audio path control
-		6: MUX_input <= 16'h0A00; // Digital audio path control
+		6: MUX_input <= 16'h0A07; // Digital audio path control
 		7: MUX_input <= 16'h0C02; // Power down control
 		8: MUX_input <= 16'h0E23; // Digital audio interface format
 		9: MUX_input <= 16'h1001; // Sampling control

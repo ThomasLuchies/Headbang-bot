@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("C:/vcs/git/Headbang-bot/headbang_bot/") File("headbang_bot.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE115F29) Path("D:/Vcs/Headbang-bot/headbang_bot/") File("headbang_bot_time_limited.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

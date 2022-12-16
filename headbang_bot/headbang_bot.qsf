@@ -571,6 +571,12 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name VHDL_FILE fft_control.vhd
+set_global_assignment -name VHDL_FILE fft/synthesis/fft.vhd -library fft
+set_global_assignment -name QIP_FILE fft/synthesis/fft.qip
 set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
 set_global_assignment -name VERILOG_FILE audio_codec.v
 set_global_assignment -name VERILOG_FILE i2c_protocol.v
@@ -588,8 +594,5 @@ set_global_assignment -name VHDL_FILE bpm_hex.vhd
 set_global_assignment -name VHDL_FILE headbang_bot.vhd
 set_global_assignment -name VHDL_FILE "beat-detection.vhd"
 set_global_assignment -name VHDL_FILE adc_buffer.vhd
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VHDL_FILE amplitude_visualiser.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
