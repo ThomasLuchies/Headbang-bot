@@ -442,7 +442,6 @@ set_location_assignment PIN_AC10 -to FL_WE_N
 set_location_assignment PIN_AE11 -to FL_RESET_N
 set_location_assignment PIN_AE12 -to FL_WP_N
 set_location_assignment PIN_Y1 -to FL_RY
-set_location_assignment PIN_AB22 -to GPIO[0]
 set_location_assignment PIN_AC15 -to GPIO[1]
 set_location_assignment PIN_AB21 -to GPIO[2]
 set_location_assignment PIN_Y17 -to GPIO[3]
@@ -567,13 +566,15 @@ set_location_assignment PIN_H14 -to EXT_IO[3]
 set_location_assignment PIN_F14 -to EXT_IO[4]
 set_location_assignment PIN_E10 -to EXT_IO[5]
 set_location_assignment PIN_D9 -to EXT_IO[6]
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name VHDL_FILE servo.vhd
+set_global_assignment -name VHDL_FILE beat_controller.vhd
 set_global_assignment -name VHDL_FILE audioqsys/synthesis/audioqsys.vhd
 set_global_assignment -name VERILOG_FILE USB_Clock_PLL.v
 set_global_assignment -name QIP_FILE USB_Clock_PLL.qip
@@ -592,4 +593,5 @@ set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
 set_global_assignment -name VHDL_FILE bpm_hex.vhd
 set_global_assignment -name VHDL_FILE headbang_bot.vhd
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform2.vwf
+set_location_assignment PIN_AB22 -to SERVO
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
