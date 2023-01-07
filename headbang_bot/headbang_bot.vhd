@@ -10,7 +10,7 @@ entity headbang_bot is port
 	SERVO : out std_logic;
 	
 	-- display
-	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6);
+	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6) := (others => '1');
 	LEDR : out std_logic_vector(17 downto 0);
 	LEDG : out std_logic_vector(8 downto 0);
 	
@@ -31,8 +31,8 @@ entity headbang_bot is port
 	DRAM_DQM : out std_logic_vector(3 downto 0);
 	
 	-- audio
-	I2C_SCLK, AUD_BCLK, AUD_XCK, AUD_DACLRCK: out std_logic;
-	AUD_DACDAT: out std_logic;
+	I2C_SCLK, AUD_DACDAT, AUD_XCK, AUD_BCLK, AUD_ADCLRCK, AUD_DACLRCK: out std_logic;
+	AUD_ADCDAT: in std_logic;
 	I2C_SDAT: inout std_logic
 );
 end entity;
@@ -67,11 +67,12 @@ architecture rtl of headbang_bot is
 	
 	component audio_player is port
 	(
-		clk,reset,SW0: in std_logic;
+		clk, reset, play: in std_logic;
 		SDIN: inout std_logic;
-		SCLK,USB_clk,BCLK: out std_logic;
-		DAC_LR_CLK: out std_logic;
+		SCLK, USB_clk, BCLK: out std_logic;
+		DAC_LR_CLK, ADC_LR_CLK: out std_logic;
 		DAC_DATA: out std_logic;
+		ADC_DATA: in std_logic;
 		ACK_LEDR: out std_logic_vector(2 downto 0)
 	);
 	end component;
@@ -145,12 +146,43 @@ begin
 		ub_n => SRAM_UB_N,
 		lb_n => SRAM_LB_N 
 	);
-	
-	sdram_pll: entity work.sdram_pll port map
+
+	aud_player: audio_codec port map
 	(
-		inclk0 => CLOCK_50,
-		c0 => DRAM_CLK
+		clk => CLOCK_50,
+		reset => KEY(0),
+		play => SW(0),
+		SDIN => I2C_SDAT,
+		SCLK => I2C_SCLK,
+		USB_clk => AUD_XCK,
+		BCLK => AUD_BCLK,
+		DAC_LR_CLK => AUD_DACLRCK,
+		ADC_LR_CLK => AUD_ADCLRCK,
+		DAC_DATA => AUD_DACDAT,
+		ADC_DATA => AUD_ADCDAT,
+		ACK_LEDR => LEDR(2 downto 0)
 	);
+	
+--	sram_user_control: entity work.sram_user_control port map
+--	(
+--		clk => CLOCK_50,
+--		key => (others => '0'), -- KEY,
+--		sw => (others => '0'), -- SW,
+--		-- ledr => LEDR,
+--		data => SRAM_DQ,
+--		address => SRAM_ADDR,
+--		output_enable_n => SRAM_OE_N,
+--		write_enable_n => SRAM_WE_N,
+--		chip_select_n => SRAM_CE_N,
+--		ub_n => SRAM_UB_N,
+--		lb_n => SRAM_LB_N
+--	);
+--	
+--	sdram_pll: entity work.sdram_pll port map
+--	(
+--		inclk0 => CLOCK_50,
+--		c0 => DRAM_CLK
+--	);
 	
 --	audio_qsys: entity work.audioqsys port map
 --	(

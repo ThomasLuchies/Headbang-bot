@@ -100,7 +100,7 @@ module USB_Clock_PLL (
 		altpll_component.clk0_phase_shift = "0",
 		altpll_component.clk1_divide_by = 1562500,
 		altpll_component.clk1_duty_cycle = 50,
-		altpll_component.clk1_multiply_by = 8021,
+		altpll_component.clk1_multiply_by = 48000,
 		altpll_component.clk1_phase_shift = "0",
 		altpll_component.compensate_clock = "CLK0",
 		altpll_component.inclk0_input_frequency = 20000,
