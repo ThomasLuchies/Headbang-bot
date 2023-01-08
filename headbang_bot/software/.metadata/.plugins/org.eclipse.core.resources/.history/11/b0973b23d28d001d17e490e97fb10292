@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <system.h>
+#include <io.h>
+#include <unistd.h>
+#include <string.h>
+
+int main(void)
+{
+	int ADC_DATA_BUFF[32] = {};
+
+
+}

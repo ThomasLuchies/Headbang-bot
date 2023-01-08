@@ -6,7 +6,8 @@ module audio_codec
 	output reg DAC_LR_CLK, ADC_LR_CLK,
 	output DAC_DATA,
 	input ADC_DATA,
-	output [2:0] ACK_LEDR
+	output [2:0] ACK_LEDR,
+	output reg [31:0] ADC_DATA_Combined
 );
 
 reg [3:0] counter; //selecting register address and its corresponding data
@@ -14,6 +15,7 @@ reg counting_state, ignition, read_enable;
 reg [15:0] MUX_input;
 reg [4:0] DAC_LR_CLK_counter;
 reg [4:0] ADC_LR_CLK_counter;
+reg [31:0] ADC_DATA_Combined_temp;
 
 wire finish_flag;
 
@@ -53,14 +55,19 @@ end
 
 always @(negedge BCLK) begin
 	if(read_enable) begin
-		if (ADC_LR_CLK_counter == 31) ADC_LR_CLK <= 1;
-		else ADC_LR_CLK <= 0;
+		if (ADC_LR_CLK_counter == 31) begin
+			ADC_LR_CLK <= 1;
+			ADC_DATA_Combined <= ADC_DATA_Combined_temp;
+		end else begin
+			ADC_LR_CLK <= 0;
+		end
 	end
 end
 	
 always @(posedge BCLK) begin
 	if(read_enable) begin
 		ADC_LR_CLK_counter <= ADC_LR_CLK_counter + 1;
+		ADC_DATA_Combined_temp[ADC_LR_CLK_counter] <= ADC_DATA;
 	end
 end
 

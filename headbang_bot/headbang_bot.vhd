@@ -44,6 +44,13 @@ architecture rtl of headbang_bot is
 --	signal bpm: std_logic_vector(9 downto 0);
 --	signal clk_count: std_logic_vector(20 downto 0);
 
+	signal clk_bpm: std_logic := '0';
+	signal direction: integer := 0;
+  
+  -- Audio general
+	signal aud_adc_lr_ck: std_logic;
+	signal aud_adc_data: std_logic_vector(31 downto 0) := (others => '0');
+
 --	-- SRAM general
 --	signal read_n, write_n, clear_sram, clear_done: std_logic := '0';
 --	signal sram_data_input, sram_data_output: std_logic_vector(15 downto 0);
@@ -86,7 +93,28 @@ architecture rtl of headbang_bot is
 		DAC_LR_CLK, ADC_LR_CLK: out std_logic;
 		DAC_DATA: out std_logic;
 		ADC_DATA: in std_logic;
-		ACK_LEDR: out std_logic_vector(2 downto 0)
+		ACK_LEDR: out std_logic_vector(2 downto 0);
+		ADC_DATA_Combined: out std_logic_vector(31 downto 0)
+	);
+	end component;
+	
+	component audioqsys is port
+	(
+		adc_lr_clk_export : in    std_logic;                                        -- export
+		aud_dat_export    : in    std_logic_vector(31 downto 0);                    -- export
+		clk_clk           : in    std_logic                     := 'X';             -- clk
+		green_leds_export : out   std_logic_vector(8 downto 0);                     -- export
+		red_leds_export   : out   std_logic_vector(17 downto 0);                    -- export
+		sdram_addr        : out   std_logic_vector(12 downto 0);                    -- addr
+		sdram_ba          : out   std_logic_vector(1 downto 0);                     -- ba
+		sdram_cas_n       : out   std_logic;                                        -- cas_n
+		sdram_cke         : out   std_logic;                                        -- cke
+		sdram_cs_n        : out   std_logic;                                        -- cs_n
+		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => 'X'); -- dq
+		sdram_dqm         : out   std_logic_vector(3 downto 0);                     -- dqm
+		sdram_ras_n       : out   std_logic;                                        -- ras_n
+		sdram_we_n        : out   std_logic;                                        -- we_n
+		switches_export   : in    std_logic_vector(17 downto 0) := (others => 'X')  -- export
 	);
 	end component;
 		
@@ -183,12 +211,12 @@ begin
 
 	AUD_DACDAT <= dac_data;
 	AUD_BCLK <= bclk;
-	AUD_ADCLRCK <= adc_lr_clk;
+	AUD_ADCLRCK <= adc_lr_clk; -- aud_adc_lr_ck;
 	AUD_DACLRCK <= dac_lr_clk;
 	direction_servo <= 2 when (headbang = '1') else 1;
 	LEDG(8) <= above_treshold;
 	LEDG(0) <= headbang;
-
+	
 	audio_codec_instance: audio_codec port map
 	(
 		clk => CLOCK_50,
@@ -201,12 +229,14 @@ begin
 		DAC_LR_CLK => dac_lr_clk,
 		ADC_LR_CLK => adc_lr_clk,
 		DAC_DATA => dac_data,
-		ADC_DATA => AUD_ADCDAT
+		ADC_DATA => AUD_ADCDAT,
+		ADC_DATA_Combined => aud_adc_data
+		--ACK_LEDR => LEDR(2 downto 0)
 	);
 	
 	adc_buffer_instance: adc_buffer port map
 	(
-		clk => BCLK,
+		clk => bclk,
 		data_in => AUD_ADCDAT,
 		reset => adc_lr_clk,
 		first_channel_out => first_channel,
@@ -278,7 +308,7 @@ begin
 --		data => data_beat_control,
 --		address => address_beat_control
 --	);
---	
+
 --	sram_user_control: entity work.sram_user_control port map
 --	(
 --		key => KEY(2 downto 0), -- KEY,
@@ -293,7 +323,7 @@ begin
 --		data_output => data_output_user_control,
 --		clear_done => clear_done_user_control
 --	);
---	
+
 --	sram_controller: entity work.sram_controller port map
 --	(
 --		clk => CLOCK_50,
@@ -313,23 +343,12 @@ begin
 --		ub_n => SRAM_UB_N,
 --		lb_n => SRAM_LB_N 
 --	);
-	
---	sdram_pll: entity work.sdram_pll port map
---	(
---		inclk0 => CLOCK_50,
---		c0 => DRAM_CLK
---	);
 
 --	audio_qsys: audioqsys port map
 --	(
 --		clk_clk => CLOCK_50,
---		leds_export => LEDR,
+--		red_leds_export => LEDR,
 --		switches_export => SW,
---		audio_ADCDAT => AUD_ADCDAT,
---		audio_ADCLRCK => adc_lr_clk,
---		audio_BCLK => bclk,
---		audio_DACDAT => dac_data,
---		audio_DACLRCK => dac_lr_clk,
 --		sdram_addr => DRAM_ADDR,
 --		sdram_ba => DRAM_BA,
 --		sdram_cas_n => DRAM_CAS_N,
@@ -338,22 +357,38 @@ begin
 --		sdram_dq => DRAM_DQ,
 --		sdram_dqm => DRAM_DQM,
 --		sdram_ras_n => DRAM_RAS_N,
---		sdram_we_n => DRAM_WE_N
+--		sdram_we_n => DRAM_WE_N,
+--		aud_dat_export   => aud_adc_data,
+--		adc_lr_clk_export => aud_adc_lr_ck,
+--		green_leds_export => LEDG
 --	);
-
+	
+--	sdram_pll: entity work.sdram_pll port map
+--	(
+--		inclk0 => CLOCK_50,
+--		c0 => DRAM_CLK
+--	);
+	
 --	sp: entity work.servo_prescaler port map
 --	(
 --		CLOCK_50,
 --		std_logic_vector(signed(bpm) * 100),
 --		clk_bpm
 --	);
---	
+
 --	hx: entity work.bpm_hex port map
 --	(
 --		bpm, 
 --		HEX0, 
 --		HEX1, 
 --		HEX2
+--	);
+
+--	sc: entity work.servo_controller port map
+--	(
+--		CLOCK_50, 
+--		direction,
+--		servo
 --	);
 	
 --	process(clk_bpm)
@@ -394,7 +429,7 @@ begin
 --			sram_address <= address_beat_control;
 --		end if;
 --	end process;
---	
+
 --	process(KEY(3))	begin
 --		if rising_edge(KEY(3)) then
 --			if sram_state <= user_control then

@@ -1,0 +1,56 @@
+#include <altera_up_avalon_audio.h>
+#include <stdio.h>
+#include <system.h>
+#include <io.h>
+#include <unistd.h>
+#include <string.h>
+
+int main(void)
+{
+//	alt_up_audio_dev * audio_dev;
+
+	/* used for audio record/playback */
+//	unsigned int l_buf;
+//	unsigned int r_buf;
+
+	// open the Audio port
+//	audio_dev = alt_up_audio_open_dev(AUDIO_NAME);
+//	if (audio_dev == NULL)
+//	printf("Error: could not open audio device \n");
+//	else
+//	printf("Opened audio device \n");
+
+	// Write something random to SDRAM for test
+//	IOWR(SDRAM_BASE, 0xFF /* random address */, 0x64);
+
+	/* read and echo audio data */
+	while(1)
+	{
+		for(int i = 0; i <= 255; i++)
+		{
+			IOWR(LEDS_BASE, 0, IORD(SDRAM_BASE, i));
+			usleep(1000);
+
+			if(IORD(SDRAM_BASE, i) > 0x0F)
+			{
+				printf("%i", i);
+			}
+		}
+
+
+		//Write to leds decimal 100 on address 0xFF
+//		IOWR(LEDS_BASE, 0, IORD(SDRAM_BASE, 0xFF));
+
+		// Audio bypass
+//		int fifospace = alt_up_audio_read_fifo_avail(audio_dev, ALT_UP_AUDIO_RIGHT);
+//		if ( fifospace > 0 ) // check if data is available
+//		{
+//			// read audio buffer
+//			alt_up_audio_read_fifo (audio_dev, &(r_buf), 1, ALT_UP_AUDIO_RIGHT);
+//			alt_up_audio_read_fifo (audio_dev, &(l_buf), 1, ALT_UP_AUDIO_LEFT);
+//			// write audio buffer
+//			alt_up_audio_write_fifo (audio_dev, &(r_buf), 1, ALT_UP_AUDIO_RIGHT);
+//			alt_up_audio_write_fifo (audio_dev, &(l_buf), 1, ALT_UP_AUDIO_LEFT);
+//		}
+	}
+}

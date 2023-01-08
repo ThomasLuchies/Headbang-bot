@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-newSoftwareExampleWizardPage.defaultLocation=D\:\\Vcs\\Headbang-bot\\headbang_bot\\software\\headbang_bot_sof
-newSoftwareExampleWizardPage.sopcinfoFile=D\:\\Vcs\\Headbang-bot\\headbang_bot\\audioqsys.sopcinfo
-newSoftwareExampleWizardPage2.newBspLocation=D\:\\Vcs\\Headbang-bot\\headbang_bot\\software\\headbang_bot_sof_bsp
+newSoftwareExampleWizardPage.defaultLocation=C\:\\Users\\Robin\\Documents\\GitHub\\Headbang-bot\\headbang_bot\\software\\audioqsys
+newSoftwareExampleWizardPage.sopcinfoFile=C\:\\Users\\Robin\\Documents\\GitHub\\Headbang-bot\\headbang_bot\\audioqsys.sopcinfo
+newSoftwareExampleWizardPage2.newBspLocation=C\:\\Users\\Robin\\Documents\\GitHub\\Headbang-bot\\headbang_bot\\software\\audioqsys_bsp

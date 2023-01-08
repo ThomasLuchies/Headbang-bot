@@ -29,13 +29,13 @@
    type="SYSTEM_VERILOG"
    library="rsp_demux" />
  <file
-   path="simulation/submodules/audioqsys_mm_interconnect_0_cmd_mux_002.sv"
+   path="simulation/submodules/audioqsys_mm_interconnect_0_cmd_mux_001.sv"
    type="SYSTEM_VERILOG"
-   library="cmd_mux_002" />
+   library="cmd_mux_001" />
  <file
    path="simulation/submodules/altera_merlin_arbitrator.sv"
    type="SYSTEM_VERILOG"
-   library="cmd_mux_002" />
+   library="cmd_mux_001" />
  <file
    path="simulation/submodules/audioqsys_mm_interconnect_0_cmd_mux.sv"
    type="SYSTEM_VERILOG"
@@ -53,9 +53,9 @@
    type="SYSTEM_VERILOG"
    library="cmd_demux" />
  <file
-   path="simulation/submodules/audioqsys_mm_interconnect_0_router_004.sv"
+   path="simulation/submodules/audioqsys_mm_interconnect_0_router_003.sv"
    type="SYSTEM_VERILOG"
-   library="router_004" />
+   library="router_003" />
  <file
    path="simulation/submodules/audioqsys_mm_interconnect_0_router_002.sv"
    type="SYSTEM_VERILOG"
@@ -71,15 +71,15 @@
  <file
    path="simulation/submodules/altera_avalon_sc_fifo.v"
    type="VERILOG"
-   library="audio_avalon_audio_slave_agent_rsp_fifo" />
+   library="jtag_uart_avalon_jtag_slave_agent_rsp_fifo" />
  <file
    path="simulation/submodules/altera_merlin_slave_agent.sv"
    type="SYSTEM_VERILOG"
-   library="audio_avalon_audio_slave_agent" />
+   library="jtag_uart_avalon_jtag_slave_agent" />
  <file
    path="simulation/submodules/altera_merlin_burst_uncompressor.sv"
    type="SYSTEM_VERILOG"
-   library="audio_avalon_audio_slave_agent" />
+   library="jtag_uart_avalon_jtag_slave_agent" />
  <file
    path="simulation/submodules/altera_merlin_master_agent.sv"
    type="SYSTEM_VERILOG"
@@ -87,7 +87,7 @@
  <file
    path="simulation/submodules/altera_merlin_slave_translator.sv"
    type="SYSTEM_VERILOG"
-   library="audio_avalon_audio_slave_translator" />
+   library="jtag_uart_avalon_jtag_slave_translator" />
  <file
    path="simulation/submodules/altera_merlin_master_translator.sv"
    type="SYSTEM_VERILOG"
@@ -185,6 +185,10 @@
    type="VHDL"
    library="sdram" />
  <file
+   path="simulation/submodules/audioqsys_red_leds.vhd"
+   type="VHDL"
+   library="red_leds" />
+ <file
    path="simulation/submodules/audioqsys_onchip_memory2.hex"
    type="HEX"
    library="onchip_memory2" />
@@ -197,13 +201,21 @@
    type="VERILOG"
    library="nios2_gen2" />
  <file
-   path="simulation/submodules/audioqsys_leds.vhd"
-   type="VHDL"
-   library="leds" />
- <file
    path="simulation/submodules/audioqsys_jtag_uart.vhd"
    type="VHDL"
    library="jtag_uart" />
+ <file
+   path="simulation/submodules/audioqsys_green_leds.vhd"
+   type="VHDL"
+   library="green_leds" />
+ <file
+   path="simulation/submodules/audioqsys_AUD_DAT.vhd"
+   type="VHDL"
+   library="AUD_DAT" />
+ <file
+   path="simulation/submodules/audioqsys_ADC_LR_CLK.vhd"
+   type="VHDL"
+   library="ADC_LR_CLK" />
  <file path="simulation/audioqsys.vhd" type="VHDL" />
  <topLevel name="audioqsys" />
  <deviceFamily name="cycloneive" />
