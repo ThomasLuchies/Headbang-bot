@@ -9,19 +9,35 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element audio
+   element ADC_LR_CLK
    {
       datum _sortIndex
       {
-         value = "6";
+         value = "9";
          type = "int";
       }
    }
-   element audio.avalon_audio_slave
+   element ADC_LR_CLK.s1
    {
       datum baseAddress
       {
-         value = "134484000";
+         value = "134483968";
+         type = "String";
+      }
+   }
+   element AUD_DAT
+   {
+      datum _sortIndex
+      {
+         value = "8";
+         type = "int";
+      }
+   }
+   element AUD_DAT.s1
+   {
+      datum baseAddress
+      {
+         value = "134483984";
          type = "String";
       }
    }
@@ -31,6 +47,22 @@
       {
          value = "0";
          type = "int";
+      }
+   }
+   element green_leds
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
+   element green_leds.s1
+   {
+      datum baseAddress
+      {
+         value = "134484000";
+         type = "String";
       }
    }
    element jtag_uart
@@ -45,23 +77,7 @@
    {
       datum baseAddress
       {
-         value = "134484016";
-         type = "String";
-      }
-   }
-   element leds
-   {
-      datum _sortIndex
-      {
-         value = "5";
-         type = "int";
-      }
-   }
-   element leds.s1
-   {
-      datum baseAddress
-      {
-         value = "134483968";
+         value = "134484048";
          type = "String";
       }
    }
@@ -97,6 +113,22 @@
          type = "String";
       }
    }
+   element red_leds
+   {
+      datum _sortIndex
+      {
+         value = "5";
+         type = "int";
+      }
+   }
+   element red_leds.s1
+   {
+      datum baseAddress
+      {
+         value = "134484016";
+         type = "String";
+      }
+   }
    element sdram
    {
       datum _sortIndex
@@ -125,7 +157,7 @@
    {
       datum baseAddress
       {
-         value = "134483984";
+         value = "134484032";
          type = "String";
       }
    }
@@ -151,14 +183,24 @@
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface
-   name="audio"
-   internal="audio.external_interface"
+   name="adc_lr_clk"
+   internal="ADC_LR_CLK.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="aud_dat"
+   internal="AUD_DAT.external_connection"
    type="conduit"
    dir="end" />
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
-   name="leds"
-   internal="leds.external_connection"
+   name="green_leds"
+   internal="green_leds.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="red_leds"
+   internal="red_leds.external_connection"
    type="conduit"
    dir="end" />
  <interface name="sdram" internal="sdram.wire" type="conduit" dir="end" />
@@ -167,19 +209,53 @@
    internal="switches.external_connection"
    type="conduit"
    dir="end" />
- <module name="audio" kind="altera_up_avalon_audio" version="18.0" enabled="1">
-  <parameter name="AUTO_CLK_CLOCK_RATE" value="50000000" />
-  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
-  <parameter name="audio_in" value="true" />
-  <parameter name="audio_out" value="true" />
-  <parameter name="avalon_bus_type" value="Memory Mapped" />
-  <parameter name="dw" value="16" />
+ <module name="ADC_LR_CLK" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="1" />
+ </module>
+ <module name="AUD_DAT" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="32" />
  </module>
  <module name="clk_0" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
+ </module>
+ <module name="green_leds" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Output" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="9" />
  </module>
  <module
    name="jtag_uart"
@@ -199,20 +275,6 @@
   <parameter name="useRelativePathForSimFile" value="false" />
   <parameter name="writeBufferDepth" value="64" />
   <parameter name="writeIRQThreshold" value="8" />
- </module>
- <module name="leds" kind="altera_avalon_pio" version="18.1" enabled="1">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="18" />
  </module>
  <module name="nios2_gen2" kind="altera_nios2_gen2" version="18.1" enabled="1">
   <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="1" />
@@ -234,7 +296,7 @@
   <parameter name="dataAddrWidth" value="28" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='sdram.s1' start='0x0' end='0x8000000' type='altera_avalon_new_sdram_controller.s1' /><slave name='onchip_memory2.s1' start='0x8020000' end='0x8040000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2.debug_mem_slave' start='0x8040800' end='0x8041000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='leds.s1' start='0x8041000' end='0x8041010' type='altera_avalon_pio.s1' /><slave name='switches.s1' start='0x8041010' end='0x8041020' type='altera_avalon_pio.s1' /><slave name='audio.avalon_audio_slave' start='0x8041020' end='0x8041030' type='altera_up_avalon_audio.avalon_audio_slave' /><slave name='jtag_uart.avalon_jtag_slave' start='0x8041030' end='0x8041038' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='sdram.s1' start='0x0' end='0x8000000' type='altera_avalon_new_sdram_controller.s1' /><slave name='onchip_memory2.s1' start='0x8020000' end='0x8040000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2.debug_mem_slave' start='0x8040800' end='0x8041000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='ADC_LR_CLK.s1' start='0x8041000' end='0x8041010' type='altera_avalon_pio.s1' /><slave name='AUD_DAT.s1' start='0x8041010' end='0x8041020' type='altera_avalon_pio.s1' /><slave name='green_leds.s1' start='0x8041020' end='0x8041030' type='altera_avalon_pio.s1' /><slave name='red_leds.s1' start='0x8041030' end='0x8041040' type='altera_avalon_pio.s1' /><slave name='switches.s1' start='0x8041040' end='0x8041050' type='altera_avalon_pio.s1' /><slave name='jtag_uart.avalon_jtag_slave' start='0x8041050' end='0x8041058' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -280,7 +342,7 @@
   <parameter name="instruction_master_high_performance_paddr_size" value="0" />
   <parameter name="instruction_master_paddr_base" value="0" />
   <parameter name="instruction_master_paddr_size" value="0" />
-  <parameter name="internalIrqMaskSystemInfo" value="3" />
+  <parameter name="internalIrqMaskSystemInfo" value="1" />
   <parameter name="io_regionbase" value="0" />
   <parameter name="io_regionsize" value="0" />
   <parameter name="master_addr_map" value="false" />
@@ -424,6 +486,20 @@
   <parameter name="useShallowMemBlocks" value="false" />
   <parameter name="writable" value="true" />
  </module>
+ <module name="red_leds" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Output" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="18" />
+ </module>
  <module
    name="sdram"
    kind="altera_avalon_new_sdram_controller"
@@ -471,18 +547,9 @@
    kind="avalon"
    version="18.1"
    start="nios2_gen2.data_master"
-   end="audio.avalon_audio_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x08041020" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="18.1"
-   start="nios2_gen2.data_master"
    end="jtag_uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x08041030" />
+  <parameter name="baseAddress" value="0x08041050" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -500,16 +567,16 @@
    start="nios2_gen2.data_master"
    end="switches.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x08041010" />
+  <parameter name="baseAddress" value="0x08041040" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
    kind="avalon"
    version="18.1"
    start="nios2_gen2.data_master"
-   end="leds.s1">
+   end="red_leds.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x08041000" />
+  <parameter name="baseAddress" value="0x08041030" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -533,6 +600,33 @@
  <connection
    kind="avalon"
    version="18.1"
+   start="nios2_gen2.data_master"
+   end="green_leds.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x08041020" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="nios2_gen2.data_master"
+   end="AUD_DAT.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x08041010" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="nios2_gen2.data_master"
+   end="ADC_LR_CLK.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x08041000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
    start="nios2_gen2.instruction_master"
    end="nios2_gen2.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -551,21 +645,16 @@
  <connection kind="clock" version="18.1" start="clk_0.clk" end="nios2_gen2.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="jtag_uart.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="switches.clk" />
- <connection kind="clock" version="18.1" start="clk_0.clk" end="leds.clk" />
- <connection kind="clock" version="18.1" start="clk_0.clk" end="audio.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="red_leds.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="sdram.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="green_leds.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="AUD_DAT.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="ADC_LR_CLK.clk" />
  <connection
    kind="clock"
    version="18.1"
    start="clk_0.clk"
    end="onchip_memory2.clk1" />
- <connection
-   kind="interrupt"
-   version="18.1"
-   start="nios2_gen2.irq"
-   end="audio.interrupt">
-  <parameter name="irqNumber" value="1" />
- </connection>
  <connection
    kind="interrupt"
    version="18.1"
@@ -588,9 +677,27 @@
    version="18.1"
    start="clk_0.clk_reset"
    end="switches.reset" />
- <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="leds.reset" />
- <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="audio.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="red_leds.reset" />
  <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="sdram.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="green_leds.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="AUD_DAT.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="ADC_LR_CLK.reset" />
  <connection
    kind="reset"
    version="18.1"
@@ -620,17 +727,27 @@
    kind="reset"
    version="18.1"
    start="nios2_gen2.debug_reset_request"
-   end="leds.reset" />
- <connection
-   kind="reset"
-   version="18.1"
-   start="nios2_gen2.debug_reset_request"
-   end="audio.reset" />
+   end="red_leds.reset" />
  <connection
    kind="reset"
    version="18.1"
    start="nios2_gen2.debug_reset_request"
    end="sdram.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="nios2_gen2.debug_reset_request"
+   end="green_leds.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="nios2_gen2.debug_reset_request"
+   end="AUD_DAT.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="nios2_gen2.debug_reset_request"
+   end="ADC_LR_CLK.reset" />
  <connection
    kind="reset"
    version="18.1"

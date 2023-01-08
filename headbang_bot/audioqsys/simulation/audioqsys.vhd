@@ -8,45 +8,57 @@ use IEEE.numeric_std.all;
 
 entity audioqsys is
 	port (
-		audio_ADCDAT    : in    std_logic                     := '0';             --    audio.ADCDAT
-		audio_ADCLRCK   : in    std_logic                     := '0';             --         .ADCLRCK
-		audio_BCLK      : in    std_logic                     := '0';             --         .BCLK
-		audio_DACDAT    : out   std_logic;                                        --         .DACDAT
-		audio_DACLRCK   : in    std_logic                     := '0';             --         .DACLRCK
-		clk_clk         : in    std_logic                     := '0';             --      clk.clk
-		leds_export     : out   std_logic_vector(17 downto 0);                    --     leds.export
-		sdram_addr      : out   std_logic_vector(12 downto 0);                    --    sdram.addr
-		sdram_ba        : out   std_logic_vector(1 downto 0);                     --         .ba
-		sdram_cas_n     : out   std_logic;                                        --         .cas_n
-		sdram_cke       : out   std_logic;                                        --         .cke
-		sdram_cs_n      : out   std_logic;                                        --         .cs_n
-		sdram_dq        : inout std_logic_vector(31 downto 0) := (others => '0'); --         .dq
-		sdram_dqm       : out   std_logic_vector(3 downto 0);                     --         .dqm
-		sdram_ras_n     : out   std_logic;                                        --         .ras_n
-		sdram_we_n      : out   std_logic;                                        --         .we_n
-		switches_export : in    std_logic_vector(17 downto 0) := (others => '0')  -- switches.export
+		adc_lr_clk_export : in    std_logic                     := '0';             -- adc_lr_clk.export
+		aud_dat_export    : in    std_logic_vector(31 downto 0) := (others => '0'); --    aud_dat.export
+		clk_clk           : in    std_logic                     := '0';             --        clk.clk
+		green_leds_export : out   std_logic_vector(8 downto 0);                     -- green_leds.export
+		red_leds_export   : out   std_logic_vector(17 downto 0);                    --   red_leds.export
+		sdram_addr        : out   std_logic_vector(12 downto 0);                    --      sdram.addr
+		sdram_ba          : out   std_logic_vector(1 downto 0);                     --           .ba
+		sdram_cas_n       : out   std_logic;                                        --           .cas_n
+		sdram_cke         : out   std_logic;                                        --           .cke
+		sdram_cs_n        : out   std_logic;                                        --           .cs_n
+		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => '0'); --           .dq
+		sdram_dqm         : out   std_logic_vector(3 downto 0);                     --           .dqm
+		sdram_ras_n       : out   std_logic;                                        --           .ras_n
+		sdram_we_n        : out   std_logic;                                        --           .we_n
+		switches_export   : in    std_logic_vector(17 downto 0) := (others => '0')  --   switches.export
 	);
 end entity audioqsys;
 
 architecture rtl of audioqsys is
-	component audioqsys_audio is
+	component audioqsys_ADC_LR_CLK is
 		port (
-			clk         : in  std_logic                     := 'X';             -- clk
-			reset       : in  std_logic                     := 'X';             -- reset
-			address     : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
-			chipselect  : in  std_logic                     := 'X';             -- chipselect
-			read        : in  std_logic                     := 'X';             -- read
-			write       : in  std_logic                     := 'X';             -- write
-			writedata   : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			readdata    : out std_logic_vector(31 downto 0);                    -- readdata
-			irq         : out std_logic;                                        -- irq
-			AUD_ADCDAT  : in  std_logic                     := 'X';             -- export
-			AUD_ADCLRCK : in  std_logic                     := 'X';             -- export
-			AUD_BCLK    : in  std_logic                     := 'X';             -- export
-			AUD_DACDAT  : out std_logic;                                        -- export
-			AUD_DACLRCK : in  std_logic                     := 'X'              -- export
+			clk      : in  std_logic                     := 'X';             -- clk
+			reset_n  : in  std_logic                     := 'X';             -- reset_n
+			address  : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			readdata : out std_logic_vector(31 downto 0);                    -- readdata
+			in_port  : in  std_logic                     := 'X'              -- export
 		);
-	end component audioqsys_audio;
+	end component audioqsys_ADC_LR_CLK;
+
+	component audioqsys_AUD_DAT is
+		port (
+			clk      : in  std_logic                     := 'X';             -- clk
+			reset_n  : in  std_logic                     := 'X';             -- reset_n
+			address  : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			readdata : out std_logic_vector(31 downto 0);                    -- readdata
+			in_port  : in  std_logic_vector(31 downto 0) := (others => 'X')  -- export
+		);
+	end component audioqsys_AUD_DAT;
+
+	component audioqsys_green_leds is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			out_port   : out std_logic_vector(8 downto 0)                      -- export
+		);
+	end component audioqsys_green_leds;
 
 	component audioqsys_jtag_uart is
 		port (
@@ -62,19 +74,6 @@ architecture rtl of audioqsys is
 			av_irq         : out std_logic                                         -- irq
 		);
 	end component audioqsys_jtag_uart;
-
-	component audioqsys_leds is
-		port (
-			clk        : in  std_logic                     := 'X';             -- clk
-			reset_n    : in  std_logic                     := 'X';             -- reset_n
-			address    : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
-			write_n    : in  std_logic                     := 'X';             -- write_n
-			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			chipselect : in  std_logic                     := 'X';             -- chipselect
-			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
-			out_port   : out std_logic_vector(17 downto 0)                     -- export
-		);
-	end component audioqsys_leds;
 
 	component audioqsys_nios2_gen2 is
 		port (
@@ -122,6 +121,19 @@ architecture rtl of audioqsys is
 			freeze     : in  std_logic                     := 'X'              -- freeze
 		);
 	end component audioqsys_onchip_memory2;
+
+	component audioqsys_red_leds is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			out_port   : out std_logic_vector(17 downto 0)                     -- export
+		);
+	end component audioqsys_red_leds;
 
 	component audioqsys_sdram is
 		port (
@@ -174,12 +186,15 @@ architecture rtl of audioqsys is
 			nios2_gen2_instruction_master_waitrequest    : out std_logic;                                        -- waitrequest
 			nios2_gen2_instruction_master_read           : in  std_logic                     := 'X';             -- read
 			nios2_gen2_instruction_master_readdata       : out std_logic_vector(31 downto 0);                    -- readdata
-			audio_avalon_audio_slave_address             : out std_logic_vector(1 downto 0);                     -- address
-			audio_avalon_audio_slave_write               : out std_logic;                                        -- write
-			audio_avalon_audio_slave_read                : out std_logic;                                        -- read
-			audio_avalon_audio_slave_readdata            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
-			audio_avalon_audio_slave_writedata           : out std_logic_vector(31 downto 0);                    -- writedata
-			audio_avalon_audio_slave_chipselect          : out std_logic;                                        -- chipselect
+			ADC_LR_CLK_s1_address                        : out std_logic_vector(1 downto 0);                     -- address
+			ADC_LR_CLK_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			AUD_DAT_s1_address                           : out std_logic_vector(1 downto 0);                     -- address
+			AUD_DAT_s1_readdata                          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			green_leds_s1_address                        : out std_logic_vector(1 downto 0);                     -- address
+			green_leds_s1_write                          : out std_logic;                                        -- write
+			green_leds_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			green_leds_s1_writedata                      : out std_logic_vector(31 downto 0);                    -- writedata
+			green_leds_s1_chipselect                     : out std_logic;                                        -- chipselect
 			jtag_uart_avalon_jtag_slave_address          : out std_logic_vector(0 downto 0);                     -- address
 			jtag_uart_avalon_jtag_slave_write            : out std_logic;                                        -- write
 			jtag_uart_avalon_jtag_slave_read             : out std_logic;                                        -- read
@@ -187,11 +202,6 @@ architecture rtl of audioqsys is
 			jtag_uart_avalon_jtag_slave_writedata        : out std_logic_vector(31 downto 0);                    -- writedata
 			jtag_uart_avalon_jtag_slave_waitrequest      : in  std_logic                     := 'X';             -- waitrequest
 			jtag_uart_avalon_jtag_slave_chipselect       : out std_logic;                                        -- chipselect
-			leds_s1_address                              : out std_logic_vector(1 downto 0);                     -- address
-			leds_s1_write                                : out std_logic;                                        -- write
-			leds_s1_readdata                             : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
-			leds_s1_writedata                            : out std_logic_vector(31 downto 0);                    -- writedata
-			leds_s1_chipselect                           : out std_logic;                                        -- chipselect
 			nios2_gen2_debug_mem_slave_address           : out std_logic_vector(8 downto 0);                     -- address
 			nios2_gen2_debug_mem_slave_write             : out std_logic;                                        -- write
 			nios2_gen2_debug_mem_slave_read              : out std_logic;                                        -- read
@@ -207,6 +217,11 @@ architecture rtl of audioqsys is
 			onchip_memory2_s1_byteenable                 : out std_logic_vector(3 downto 0);                     -- byteenable
 			onchip_memory2_s1_chipselect                 : out std_logic;                                        -- chipselect
 			onchip_memory2_s1_clken                      : out std_logic;                                        -- clken
+			red_leds_s1_address                          : out std_logic_vector(1 downto 0);                     -- address
+			red_leds_s1_write                            : out std_logic;                                        -- write
+			red_leds_s1_readdata                         : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			red_leds_s1_writedata                        : out std_logic_vector(31 downto 0);                    -- writedata
+			red_leds_s1_chipselect                       : out std_logic;                                        -- chipselect
 			sdram_s1_address                             : out std_logic_vector(24 downto 0);                    -- address
 			sdram_s1_write                               : out std_logic;                                        -- write
 			sdram_s1_read                                : out std_logic;                                        -- read
@@ -226,7 +241,6 @@ architecture rtl of audioqsys is
 			clk           : in  std_logic                     := 'X'; -- clk
 			reset         : in  std_logic                     := 'X'; -- reset
 			receiver0_irq : in  std_logic                     := 'X'; -- irq
-			receiver1_irq : in  std_logic                     := 'X'; -- irq
 			sender_irq    : out std_logic_vector(31 downto 0)         -- irq
 		);
 	end component audioqsys_irq_mapper;
@@ -310,12 +324,6 @@ architecture rtl of audioqsys is
 	signal nios2_gen2_instruction_master_waitrequest                     : std_logic;                     -- mm_interconnect_0:nios2_gen2_instruction_master_waitrequest -> nios2_gen2:i_waitrequest
 	signal nios2_gen2_instruction_master_address                         : std_logic_vector(27 downto 0); -- nios2_gen2:i_address -> mm_interconnect_0:nios2_gen2_instruction_master_address
 	signal nios2_gen2_instruction_master_read                            : std_logic;                     -- nios2_gen2:i_read -> mm_interconnect_0:nios2_gen2_instruction_master_read
-	signal mm_interconnect_0_audio_avalon_audio_slave_chipselect         : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_chipselect -> audio:chipselect
-	signal mm_interconnect_0_audio_avalon_audio_slave_readdata           : std_logic_vector(31 downto 0); -- audio:readdata -> mm_interconnect_0:audio_avalon_audio_slave_readdata
-	signal mm_interconnect_0_audio_avalon_audio_slave_address            : std_logic_vector(1 downto 0);  -- mm_interconnect_0:audio_avalon_audio_slave_address -> audio:address
-	signal mm_interconnect_0_audio_avalon_audio_slave_read               : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_read -> audio:read
-	signal mm_interconnect_0_audio_avalon_audio_slave_write              : std_logic;                     -- mm_interconnect_0:audio_avalon_audio_slave_write -> audio:write
-	signal mm_interconnect_0_audio_avalon_audio_slave_writedata          : std_logic_vector(31 downto 0); -- mm_interconnect_0:audio_avalon_audio_slave_writedata -> audio:writedata
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect      : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_readdata        : std_logic_vector(31 downto 0); -- jtag_uart:av_readdata -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_readdata
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest     : std_logic;                     -- jtag_uart:av_waitrequest -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_waitrequest
@@ -333,11 +341,11 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_nios2_gen2_debug_mem_slave_writedata        : std_logic_vector(31 downto 0); -- mm_interconnect_0:nios2_gen2_debug_mem_slave_writedata -> nios2_gen2:debug_mem_slave_writedata
 	signal mm_interconnect_0_switches_s1_readdata                        : std_logic_vector(31 downto 0); -- switches:readdata -> mm_interconnect_0:switches_s1_readdata
 	signal mm_interconnect_0_switches_s1_address                         : std_logic_vector(1 downto 0);  -- mm_interconnect_0:switches_s1_address -> switches:address
-	signal mm_interconnect_0_leds_s1_chipselect                          : std_logic;                     -- mm_interconnect_0:leds_s1_chipselect -> leds:chipselect
-	signal mm_interconnect_0_leds_s1_readdata                            : std_logic_vector(31 downto 0); -- leds:readdata -> mm_interconnect_0:leds_s1_readdata
-	signal mm_interconnect_0_leds_s1_address                             : std_logic_vector(1 downto 0);  -- mm_interconnect_0:leds_s1_address -> leds:address
-	signal mm_interconnect_0_leds_s1_write                               : std_logic;                     -- mm_interconnect_0:leds_s1_write -> mm_interconnect_0_leds_s1_write:in
-	signal mm_interconnect_0_leds_s1_writedata                           : std_logic_vector(31 downto 0); -- mm_interconnect_0:leds_s1_writedata -> leds:writedata
+	signal mm_interconnect_0_red_leds_s1_chipselect                      : std_logic;                     -- mm_interconnect_0:red_leds_s1_chipselect -> red_leds:chipselect
+	signal mm_interconnect_0_red_leds_s1_readdata                        : std_logic_vector(31 downto 0); -- red_leds:readdata -> mm_interconnect_0:red_leds_s1_readdata
+	signal mm_interconnect_0_red_leds_s1_address                         : std_logic_vector(1 downto 0);  -- mm_interconnect_0:red_leds_s1_address -> red_leds:address
+	signal mm_interconnect_0_red_leds_s1_write                           : std_logic;                     -- mm_interconnect_0:red_leds_s1_write -> mm_interconnect_0_red_leds_s1_write:in
+	signal mm_interconnect_0_red_leds_s1_writedata                       : std_logic_vector(31 downto 0); -- mm_interconnect_0:red_leds_s1_writedata -> red_leds:writedata
 	signal mm_interconnect_0_onchip_memory2_s1_chipselect                : std_logic;                     -- mm_interconnect_0:onchip_memory2_s1_chipselect -> onchip_memory2:chipselect
 	signal mm_interconnect_0_onchip_memory2_s1_readdata                  : std_logic_vector(31 downto 0); -- onchip_memory2:readdata -> mm_interconnect_0:onchip_memory2_s1_readdata
 	signal mm_interconnect_0_onchip_memory2_s1_address                   : std_logic_vector(14 downto 0); -- mm_interconnect_0:onchip_memory2_s1_address -> onchip_memory2:address
@@ -354,37 +362,58 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_sdram_s1_readdatavalid                      : std_logic;                     -- sdram:za_valid -> mm_interconnect_0:sdram_s1_readdatavalid
 	signal mm_interconnect_0_sdram_s1_write                              : std_logic;                     -- mm_interconnect_0:sdram_s1_write -> mm_interconnect_0_sdram_s1_write:in
 	signal mm_interconnect_0_sdram_s1_writedata                          : std_logic_vector(31 downto 0); -- mm_interconnect_0:sdram_s1_writedata -> sdram:az_data
-	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- audio:irq -> irq_mapper:receiver0_irq
-	signal irq_mapper_receiver1_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver1_irq
+	signal mm_interconnect_0_green_leds_s1_chipselect                    : std_logic;                     -- mm_interconnect_0:green_leds_s1_chipselect -> green_leds:chipselect
+	signal mm_interconnect_0_green_leds_s1_readdata                      : std_logic_vector(31 downto 0); -- green_leds:readdata -> mm_interconnect_0:green_leds_s1_readdata
+	signal mm_interconnect_0_green_leds_s1_address                       : std_logic_vector(1 downto 0);  -- mm_interconnect_0:green_leds_s1_address -> green_leds:address
+	signal mm_interconnect_0_green_leds_s1_write                         : std_logic;                     -- mm_interconnect_0:green_leds_s1_write -> mm_interconnect_0_green_leds_s1_write:in
+	signal mm_interconnect_0_green_leds_s1_writedata                     : std_logic_vector(31 downto 0); -- mm_interconnect_0:green_leds_s1_writedata -> green_leds:writedata
+	signal mm_interconnect_0_aud_dat_s1_readdata                         : std_logic_vector(31 downto 0); -- AUD_DAT:readdata -> mm_interconnect_0:AUD_DAT_s1_readdata
+	signal mm_interconnect_0_aud_dat_s1_address                          : std_logic_vector(1 downto 0);  -- mm_interconnect_0:AUD_DAT_s1_address -> AUD_DAT:address
+	signal mm_interconnect_0_adc_lr_clk_s1_readdata                      : std_logic_vector(31 downto 0); -- ADC_LR_CLK:readdata -> mm_interconnect_0:ADC_LR_CLK_s1_readdata
+	signal mm_interconnect_0_adc_lr_clk_s1_address                       : std_logic_vector(1 downto 0);  -- mm_interconnect_0:ADC_LR_CLK_s1_address -> ADC_LR_CLK:address
+	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver0_irq
 	signal nios2_gen2_irq_irq                                            : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> nios2_gen2:irq
-	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [audio:reset, irq_mapper:reset, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, onchip_memory2:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
+	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [irq_mapper:reset, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, onchip_memory2:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
 	signal rst_controller_reset_out_reset_req                            : std_logic;                     -- rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read_ports_inv  : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:inv -> jtag_uart:av_read_n
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:inv -> jtag_uart:av_write_n
-	signal mm_interconnect_0_leds_s1_write_ports_inv                     : std_logic;                     -- mm_interconnect_0_leds_s1_write:inv -> leds:write_n
+	signal mm_interconnect_0_red_leds_s1_write_ports_inv                 : std_logic;                     -- mm_interconnect_0_red_leds_s1_write:inv -> red_leds:write_n
 	signal mm_interconnect_0_sdram_s1_read_ports_inv                     : std_logic;                     -- mm_interconnect_0_sdram_s1_read:inv -> sdram:az_rd_n
 	signal mm_interconnect_0_sdram_s1_byteenable_ports_inv               : std_logic_vector(3 downto 0);  -- mm_interconnect_0_sdram_s1_byteenable:inv -> sdram:az_be_n
 	signal mm_interconnect_0_sdram_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_sdram_s1_write:inv -> sdram:az_wr_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [jtag_uart:rst_n, leds:reset_n, nios2_gen2:reset_n, sdram:reset_n, switches:reset_n]
+	signal mm_interconnect_0_green_leds_s1_write_ports_inv               : std_logic;                     -- mm_interconnect_0_green_leds_s1_write:inv -> green_leds:write_n
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [ADC_LR_CLK:reset_n, AUD_DAT:reset_n, green_leds:reset_n, jtag_uart:rst_n, nios2_gen2:reset_n, red_leds:reset_n, sdram:reset_n, switches:reset_n]
 
 begin
 
-	audio : component audioqsys_audio
+	adc_lr_clk : component audioqsys_ADC_LR_CLK
 		port map (
-			clk         => clk_clk,                                               --                clk.clk
-			reset       => rst_controller_reset_out_reset,                        --              reset.reset
-			address     => mm_interconnect_0_audio_avalon_audio_slave_address,    -- avalon_audio_slave.address
-			chipselect  => mm_interconnect_0_audio_avalon_audio_slave_chipselect, --                   .chipselect
-			read        => mm_interconnect_0_audio_avalon_audio_slave_read,       --                   .read
-			write       => mm_interconnect_0_audio_avalon_audio_slave_write,      --                   .write
-			writedata   => mm_interconnect_0_audio_avalon_audio_slave_writedata,  --                   .writedata
-			readdata    => mm_interconnect_0_audio_avalon_audio_slave_readdata,   --                   .readdata
-			irq         => irq_mapper_receiver0_irq,                              --          interrupt.irq
-			AUD_ADCDAT  => audio_ADCDAT,                                          -- external_interface.export
-			AUD_ADCLRCK => audio_ADCLRCK,                                         --                   .export
-			AUD_BCLK    => audio_BCLK,                                            --                   .export
-			AUD_DACDAT  => audio_DACDAT,                                          --                   .export
-			AUD_DACLRCK => audio_DACLRCK                                          --                   .export
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_adc_lr_clk_s1_address,  --                  s1.address
+			readdata => mm_interconnect_0_adc_lr_clk_s1_readdata, --                    .readdata
+			in_port  => adc_lr_clk_export                         -- external_connection.export
+		);
+
+	aud_dat : component audioqsys_AUD_DAT
+		port map (
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_aud_dat_s1_address,     --                  s1.address
+			readdata => mm_interconnect_0_aud_dat_s1_readdata,    --                    .readdata
+			in_port  => aud_dat_export                            -- external_connection.export
+		);
+
+	green_leds : component audioqsys_green_leds
+		port map (
+			clk        => clk_clk,                                         --                 clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,        --               reset.reset_n
+			address    => mm_interconnect_0_green_leds_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_green_leds_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_green_leds_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_green_leds_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_green_leds_s1_readdata,        --                    .readdata
+			out_port   => green_leds_export                                -- external_connection.export
 		);
 
 	jtag_uart : component audioqsys_jtag_uart
@@ -398,19 +427,7 @@ begin
 			av_write_n     => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv, --                  .write_n
 			av_writedata   => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,       --                  .writedata
 			av_waitrequest => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest,     --                  .waitrequest
-			av_irq         => irq_mapper_receiver1_irq                                       --               irq.irq
-		);
-
-	leds : component audioqsys_leds
-		port map (
-			clk        => clk_clk,                                   --                 clk.clk
-			reset_n    => rst_controller_reset_out_reset_ports_inv,  --               reset.reset_n
-			address    => mm_interconnect_0_leds_s1_address,         --                  s1.address
-			write_n    => mm_interconnect_0_leds_s1_write_ports_inv, --                    .write_n
-			writedata  => mm_interconnect_0_leds_s1_writedata,       --                    .writedata
-			chipselect => mm_interconnect_0_leds_s1_chipselect,      --                    .chipselect
-			readdata   => mm_interconnect_0_leds_s1_readdata,        --                    .readdata
-			out_port   => leds_export                                -- external_connection.export
+			av_irq         => irq_mapper_receiver0_irq                                       --               irq.irq
 		);
 
 	nios2_gen2 : component audioqsys_nios2_gen2
@@ -456,6 +473,18 @@ begin
 			reset      => rst_controller_reset_out_reset,                 -- reset1.reset
 			reset_req  => rst_controller_reset_out_reset_req,             --       .reset_req
 			freeze     => '0'                                             -- (terminated)
+		);
+
+	red_leds : component audioqsys_red_leds
+		port map (
+			clk        => clk_clk,                                       --                 clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,      --               reset.reset_n
+			address    => mm_interconnect_0_red_leds_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_red_leds_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_red_leds_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_red_leds_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_red_leds_s1_readdata,        --                    .readdata
+			out_port   => red_leds_export                                -- external_connection.export
 		);
 
 	sdram : component audioqsys_sdram
@@ -507,12 +536,15 @@ begin
 			nios2_gen2_instruction_master_waitrequest    => nios2_gen2_instruction_master_waitrequest,                 --                                       .waitrequest
 			nios2_gen2_instruction_master_read           => nios2_gen2_instruction_master_read,                        --                                       .read
 			nios2_gen2_instruction_master_readdata       => nios2_gen2_instruction_master_readdata,                    --                                       .readdata
-			audio_avalon_audio_slave_address             => mm_interconnect_0_audio_avalon_audio_slave_address,        --               audio_avalon_audio_slave.address
-			audio_avalon_audio_slave_write               => mm_interconnect_0_audio_avalon_audio_slave_write,          --                                       .write
-			audio_avalon_audio_slave_read                => mm_interconnect_0_audio_avalon_audio_slave_read,           --                                       .read
-			audio_avalon_audio_slave_readdata            => mm_interconnect_0_audio_avalon_audio_slave_readdata,       --                                       .readdata
-			audio_avalon_audio_slave_writedata           => mm_interconnect_0_audio_avalon_audio_slave_writedata,      --                                       .writedata
-			audio_avalon_audio_slave_chipselect          => mm_interconnect_0_audio_avalon_audio_slave_chipselect,     --                                       .chipselect
+			ADC_LR_CLK_s1_address                        => mm_interconnect_0_adc_lr_clk_s1_address,                   --                          ADC_LR_CLK_s1.address
+			ADC_LR_CLK_s1_readdata                       => mm_interconnect_0_adc_lr_clk_s1_readdata,                  --                                       .readdata
+			AUD_DAT_s1_address                           => mm_interconnect_0_aud_dat_s1_address,                      --                             AUD_DAT_s1.address
+			AUD_DAT_s1_readdata                          => mm_interconnect_0_aud_dat_s1_readdata,                     --                                       .readdata
+			green_leds_s1_address                        => mm_interconnect_0_green_leds_s1_address,                   --                          green_leds_s1.address
+			green_leds_s1_write                          => mm_interconnect_0_green_leds_s1_write,                     --                                       .write
+			green_leds_s1_readdata                       => mm_interconnect_0_green_leds_s1_readdata,                  --                                       .readdata
+			green_leds_s1_writedata                      => mm_interconnect_0_green_leds_s1_writedata,                 --                                       .writedata
+			green_leds_s1_chipselect                     => mm_interconnect_0_green_leds_s1_chipselect,                --                                       .chipselect
 			jtag_uart_avalon_jtag_slave_address          => mm_interconnect_0_jtag_uart_avalon_jtag_slave_address,     --            jtag_uart_avalon_jtag_slave.address
 			jtag_uart_avalon_jtag_slave_write            => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write,       --                                       .write
 			jtag_uart_avalon_jtag_slave_read             => mm_interconnect_0_jtag_uart_avalon_jtag_slave_read,        --                                       .read
@@ -520,11 +552,6 @@ begin
 			jtag_uart_avalon_jtag_slave_writedata        => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,   --                                       .writedata
 			jtag_uart_avalon_jtag_slave_waitrequest      => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest, --                                       .waitrequest
 			jtag_uart_avalon_jtag_slave_chipselect       => mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect,  --                                       .chipselect
-			leds_s1_address                              => mm_interconnect_0_leds_s1_address,                         --                                leds_s1.address
-			leds_s1_write                                => mm_interconnect_0_leds_s1_write,                           --                                       .write
-			leds_s1_readdata                             => mm_interconnect_0_leds_s1_readdata,                        --                                       .readdata
-			leds_s1_writedata                            => mm_interconnect_0_leds_s1_writedata,                       --                                       .writedata
-			leds_s1_chipselect                           => mm_interconnect_0_leds_s1_chipselect,                      --                                       .chipselect
 			nios2_gen2_debug_mem_slave_address           => mm_interconnect_0_nios2_gen2_debug_mem_slave_address,      --             nios2_gen2_debug_mem_slave.address
 			nios2_gen2_debug_mem_slave_write             => mm_interconnect_0_nios2_gen2_debug_mem_slave_write,        --                                       .write
 			nios2_gen2_debug_mem_slave_read              => mm_interconnect_0_nios2_gen2_debug_mem_slave_read,         --                                       .read
@@ -540,6 +567,11 @@ begin
 			onchip_memory2_s1_byteenable                 => mm_interconnect_0_onchip_memory2_s1_byteenable,            --                                       .byteenable
 			onchip_memory2_s1_chipselect                 => mm_interconnect_0_onchip_memory2_s1_chipselect,            --                                       .chipselect
 			onchip_memory2_s1_clken                      => mm_interconnect_0_onchip_memory2_s1_clken,                 --                                       .clken
+			red_leds_s1_address                          => mm_interconnect_0_red_leds_s1_address,                     --                            red_leds_s1.address
+			red_leds_s1_write                            => mm_interconnect_0_red_leds_s1_write,                       --                                       .write
+			red_leds_s1_readdata                         => mm_interconnect_0_red_leds_s1_readdata,                    --                                       .readdata
+			red_leds_s1_writedata                        => mm_interconnect_0_red_leds_s1_writedata,                   --                                       .writedata
+			red_leds_s1_chipselect                       => mm_interconnect_0_red_leds_s1_chipselect,                  --                                       .chipselect
 			sdram_s1_address                             => mm_interconnect_0_sdram_s1_address,                        --                               sdram_s1.address
 			sdram_s1_write                               => mm_interconnect_0_sdram_s1_write,                          --                                       .write
 			sdram_s1_read                                => mm_interconnect_0_sdram_s1_read,                           --                                       .read
@@ -558,7 +590,6 @@ begin
 			clk           => clk_clk,                        --       clk.clk
 			reset         => rst_controller_reset_out_reset, -- clk_reset.reset
 			receiver0_irq => irq_mapper_receiver0_irq,       -- receiver0.irq
-			receiver1_irq => irq_mapper_receiver1_irq,       -- receiver1.irq
 			sender_irq    => nios2_gen2_irq_irq              --    sender.irq
 		);
 
@@ -631,13 +662,15 @@ begin
 
 	mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv <= not mm_interconnect_0_jtag_uart_avalon_jtag_slave_write;
 
-	mm_interconnect_0_leds_s1_write_ports_inv <= not mm_interconnect_0_leds_s1_write;
+	mm_interconnect_0_red_leds_s1_write_ports_inv <= not mm_interconnect_0_red_leds_s1_write;
 
 	mm_interconnect_0_sdram_s1_read_ports_inv <= not mm_interconnect_0_sdram_s1_read;
 
 	mm_interconnect_0_sdram_s1_byteenable_ports_inv <= not mm_interconnect_0_sdram_s1_byteenable;
 
 	mm_interconnect_0_sdram_s1_write_ports_inv <= not mm_interconnect_0_sdram_s1_write;
+
+	mm_interconnect_0_green_leds_s1_write_ports_inv <= not mm_interconnect_0_green_leds_s1_write;
 
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
 

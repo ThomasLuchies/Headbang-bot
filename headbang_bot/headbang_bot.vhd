@@ -41,6 +41,10 @@ architecture rtl of headbang_bot is
 
 	signal clk_bpm: std_logic := '0';
 	signal direction: integer := 0;
+  
+  -- Audio general
+	signal aud_adc_lr_ck: std_logic;			--adc lr clk
+	signal aud_adc_data: std_logic_vector(31 downto 0) := (others => '0');			--adc data
 
 	-- SRAM general
 	signal read_n, write_n, clear_sram, clear_done: std_logic := '0';
@@ -73,7 +77,28 @@ architecture rtl of headbang_bot is
 		DAC_LR_CLK, ADC_LR_CLK: out std_logic;
 		DAC_DATA: out std_logic;
 		ADC_DATA: in std_logic;
-		ACK_LEDR: out std_logic_vector(2 downto 0)
+		ACK_LEDR: out std_logic_vector(2 downto 0);
+		ADC_DATA_Combined: out std_logic_vector(31 downto 0)
+	);
+	end component;
+	
+	component audioqsys is port
+	(
+		adc_lr_clk_export : in    std_logic;                                        -- export
+		aud_dat_export    : in    std_logic_vector(31 downto 0);                    -- export
+		clk_clk           : in    std_logic                     := 'X';             -- clk
+		green_leds_export : out   std_logic_vector(8 downto 0);                     -- export
+		red_leds_export   : out   std_logic_vector(17 downto 0);                    -- export
+		sdram_addr        : out   std_logic_vector(12 downto 0);                    -- addr
+		sdram_ba          : out   std_logic_vector(1 downto 0);                     -- ba
+		sdram_cas_n       : out   std_logic;                                        -- cas_n
+		sdram_cke         : out   std_logic;                                        -- cke
+		sdram_cs_n        : out   std_logic;                                        -- cs_n
+		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => 'X'); -- dq
+		sdram_dqm         : out   std_logic_vector(3 downto 0);                     -- dqm
+		sdram_ras_n       : out   std_logic;                                        -- ras_n
+		sdram_we_n        : out   std_logic;                                        -- we_n
+		switches_export   : in    std_logic_vector(17 downto 0) := (others => 'X')  -- export
 	);
 	end component;
 	
@@ -147,6 +172,8 @@ begin
 		lb_n => SRAM_LB_N 
 	);
 
+	AUD_ADCLRCK <= aud_adc_lr_ck; --adc lr clk
+
 	aud_player: audio_codec port map
 	(
 		clk => CLOCK_50,
@@ -157,10 +184,11 @@ begin
 		USB_clk => AUD_XCK,
 		BCLK => AUD_BCLK,
 		DAC_LR_CLK => AUD_DACLRCK,
-		ADC_LR_CLK => AUD_ADCLRCK,
+		ADC_LR_CLK => aud_adc_lr_ck,
 		DAC_DATA => AUD_DACDAT,
 		ADC_DATA => AUD_ADCDAT,
-		ACK_LEDR => LEDR(2 downto 0)
+		ADC_DATA_Combined => aud_adc_data
+		--ACK_LEDR => LEDR(2 downto 0)
 	);
 	
 --	sram_user_control: entity work.sram_user_control port map
@@ -177,48 +205,46 @@ begin
 --		ub_n => SRAM_UB_N,
 --		lb_n => SRAM_LB_N
 --	);
---	
---	sdram_pll: entity work.sdram_pll port map
---	(
---		inclk0 => CLOCK_50,
---		c0 => DRAM_CLK
---	);
 	
---	audio_qsys: entity work.audioqsys port map
+	sdram_pll: entity work.sdram_pll port map
+	(
+		inclk0 => CLOCK_50,
+		c0 => DRAM_CLK
+	);
+	
+	audio_qsys: audioqsys port map
+	(
+		clk_clk => CLOCK_50,
+		red_leds_export => LEDR,
+		switches_export => SW,
+		sdram_addr => DRAM_ADDR,
+		sdram_ba => DRAM_BA,
+		sdram_cas_n => DRAM_CAS_N,
+		sdram_cke => DRAM_CKE,
+		sdram_cs_n => DRAM_CS_N,
+		sdram_dq => DRAM_DQ,
+		sdram_dqm => DRAM_DQM,
+		sdram_ras_n => DRAM_RAS_N,
+		sdram_we_n => DRAM_WE_N,
+		aud_dat_export   => aud_adc_data,
+		adc_lr_clk_export => aud_adc_lr_ck,
+		green_leds_export => LEDG
+	);
+
+--	sp: entity work.servo_prescaler port map
 --	(
---		clk_clk => CLOCK_50,
---		leds_export => LEDR,
---		switches_export => SW,
---		audio_ADCDAT => AUD_ADCDAT,
---		audio_ADCLRCK => AUD_ADCLRCK,
---		audio_BCLK => AUD_BCLK,
---		audio_DACDAT => AUD_DACDAT,
---		audio_DACLRCK => AUD_DACLRCK,
---		sdram_addr => DRAM_ADDR,
---		sdram_ba => DRAM_BA,
---		sdram_cas_n => DRAM_CAS_N,
---		sdram_cke => DRAM_CKE,
---		sdram_cs_n => DRAM_CS_N,
---		sdram_dq => DRAM_DQ,
---		sdram_dqm => DRAM_DQM,
---		sdram_ras_n => DRAM_RAS_N,
---		sdram_we_n => DRAM_WE_N
+--		CLOCK_50,
+--		std_logic_vector(signed(bpm) * 100),
+--		clk_bpm
+--	);
+--	
+--	sc: entity work.servo_controller port map
+--	(
+--		CLOCK_50, 
+--		direction,
+--		servo
 --	);
 
-	--sp: entity work.servo_prescaler port map
-	--(
-		--CLOCK_50,
-		--std_logic_vector(signed(bpm) * 100),
-		--clk_bpm
-	--);
-	
-	--sc: entity work.servo_controller port map
-	--(
-		--CLOCK_50, 
-		--direction,
-		--servo
-	--);
-	
 	hx: entity work.bpm_hex port map
 	(
 		bpm, 
@@ -259,7 +285,7 @@ begin
 			
 		end if;
 		
-	end process;
+	end process
 	
 	process(clear_done) 
 	begin

@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <system.h>
+#include <io.h>
+#include <unistd.h>
+#include <string.h>
+
+int main(void)
+{
+	alt_32 ADC_DATA_BUFF = 0;
+	unsigned int ADC_CLK = 0;
+	unsigned int ADC_CLK_save = 0;
+
+	while(1)
+	{
+		ADC_CLK = IORD(ADC_LR_CLK_BASE, 0);
+
+		if(ADC_CLK_save != ADC_CLK)
+		{
+			//if different from last check, 1 -> 0 or 0 -> 1
+			ADC_CLK_save = ADC_CLK;
+
+			if(ADC_CLK_save)
+			{
+				//if high (1)
+				ADC_DATA_BUFF = IORD(AUD_DAT_BASE, 0);
+
+				// Write something random to SDRAM for test
+				IOWR(SDRAM_BASE, 0xFF /* random address */, 0x64);
+
+				//print for testing
+				printf("%i \r\n", ADC_DATA_BUFF);
+			}
+		}
+	}
+}
