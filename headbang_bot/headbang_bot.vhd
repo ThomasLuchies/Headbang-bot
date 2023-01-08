@@ -115,8 +115,8 @@ architecture rtl of headbang_bot is
 	);
 	end component;
 	
-	component servo_controller is	port
-	(
+	component servo_controller is port
+	(	
 		clki: in std_logic;
 		direction: in integer;
 		clko: out std_logic
@@ -185,6 +185,9 @@ begin
 	AUD_BCLK <= bclk;
 	AUD_ADCLRCK <= adc_lr_clk;
 	AUD_DACLRCK <= dac_lr_clk;
+	direction_servo <= 2 when (headbang = '1') else 1;
+	LEDG(8) <= above_treshold;
+	LEDG(0) <= headbang;
 
 	audio_codec_instance: audio_codec port map
 	(
@@ -223,17 +226,13 @@ begin
 		last_channel => last_channel,
 		headbang => headbang
 	);
-	
-	direction_servo <= 2 when (headbang = '1') else 1;
-	servo_controller_instance: servo_controller port map
+
+	servo_instance: servo_controller port map
 	(
-	  clki => CLOCK_50,
-	  direction  => direction_servo,
-	  clko => GPIO(0)
+		clki => CLOCK_50,
+		direction  => direction_servo,
+		clko => GPIO(0)
 	);
-	
-	LEDG(8) <= above_treshold;
-	LEDG(0) <= headbang;
 	
 --	fft_control_instance: fft_control port map
 --	(
