@@ -40,13 +40,39 @@ end entity;
 
 architecture rtl of headbang_bot is
 
-   signal clk_bpm: std_logic := '0';
-   signal direction: integer := 0;
+   	signal clk_bpm: std_logic := '0';
+   	signal direction: integer := 0;
+	signal bpm: std_logic_vector(9 downto 0);
+	signal clk_count: std_logic_vector(20 downto 0);
+
+	-- SRAM general
+	signal read_n, write_n, clear_sram, clear_done: std_logic := '0';
+	signal sram_data_input, sram_data_output: std_logic_vector(15 downto 0);
+	signal sram_address: std_logic_vector(19 downto 0);
+	
+	-- SRAM states
+	type sram_control_types is (user_control, beat_control);
+	signal sram_state: sram_control_types;
+	
+	-- SRAM user_control
+	signal read_n_user_control, write_n_user_control, clear_sram_user_control : std_logic;
+	signal data_input_user_control : std_logic_vector(15 downto 0);
+	signal addr_user_control : std_logic_vector(19 downto 0);
+	signal data_output_user_control : std_logic_vector(15 downto 0);
+	signal clear_done_user_control: std_logic;
+	
+	-- SRAM beat_control 
+	signal sram_data_beat_control: std_logic_vector(15 downto 0);
+	signal sram_address_beat_control: std_logic_vector(19 downto 0);
+	signal read_n_beat_control: std_logic;
+	signal data_beat_control: std_logic_vector(15 downto 0);
+	signal address_beat_control: std_logic_vector(19 downto 0);
+
 	signal adc_lr_clk, bclk, dac_data, dac_lr_clk: std_logic;
 	signal first_channel: std_logic_vector(15 downto 0);
 	signal reset_n, sink_valid, sink_sop, sink_eop: std_logic;
 	signal first_fft_source_sop, first_fft_source_eop: std_logic;
-		
+
 	component audio_codec is port
 	(
 		clk, reset, play: in std_logic;
@@ -130,8 +156,61 @@ architecture rtl of headbang_bot is
 		reset_n: out std_logic
 	);
 	end component;
-	
+
 begin
+
+	process(CLOCK_50) begin
+		clk_count <= std_logic_vector(unsigned(clk_count) + 1);
+	end process;
+	
+	beat_controller: entity work.beat_controller port map
+	(
+		  CLOCK_50 => CLOCK_50,
+		  clk_count => clk_count,
+		  bpm => bpm,
+		  enabled => KEY(3),
+		  servo_pin => SERVO,
+
+		  --sram
+		  read_n => read_n_beat_control,
+		  data => data_beat_control,
+		  address => address_beat_control
+	);
+	
+	sram_user_control: entity work.sram_user_control port map
+	(
+		key => KEY(2 downto 0), -- KEY,
+		sw => SW, -- SW,
+		ledr => LEDR,
+		ledg => LEDG,
+		read_n => read_n_user_control,
+		write_n => write_n_user_control, 
+		clear_sram => clear_sram_user_control,
+		data_input => data_input_user_control,
+		addr_input => addr_user_control,
+		data_output => data_output_user_control,
+		clear_done => clear_done_user_control
+	);
+	
+	sram_controller: entity work.sram_controller port map
+	(
+		clk => CLOCK_50,
+		read_n => read_n,
+		write_n => write_n,
+		clear_sram => clear_sram,
+		data_input => sram_data_input,
+		addr_input => sram_address,
+		data_output => sram_data_output,
+		clear_done => clear_done,
+		
+		data => SRAM_DQ,
+		address => SRAM_ADDR,
+		output_enable_n => SRAM_OE_N,
+		write_enable_n => SRAM_WE_N,
+		chip_select_n => SRAM_CE_N,
+		ub_n => SRAM_UB_N,
+		lb_n => SRAM_LB_N 
+	);
 
 	AUD_DACDAT <= dac_data;
 	AUD_BCLK <= bclk;
@@ -280,6 +359,38 @@ begin
 				directionp := 2;
 			end if;
 			direction <= directionp;
+		end if;
+	end process;
+
+	process(clear_done) begin
+		if clear_done = '1' then
+			clear_sram <= '0';
+		end if;
+		if sram_state <= user_control then
+			read_n <= read_n_user_control;
+			write_n <= write_n_user_control;
+			clear_sram <= clear_sram_user_control;
+			clear_done <= clear_done_user_control;
+			sram_data_input <= data_input_user_control;
+			sram_data_output <= data_output_user_control;
+			sram_address <= addr_user_control;
+		elsif sram_state <= beat_control then
+			read_n <= read_n_beat_control;
+			write_n <= '0';
+			sram_data_output <= data_beat_control;
+			sram_address <= address_beat_control;
+		end if;
+	end process;
+	
+	process(KEY(3))	begin
+		if rising_edge(KEY(3)) then
+			if sram_state <= user_control then
+				sram_state <= beat_control;
+			elsif sram_state <= beat_control then
+				sram_state <= user_control;
+			else
+				sram_state <= user_control;
+			end if;
 		end if;
 	end process;
 	
