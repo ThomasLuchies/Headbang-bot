@@ -7,12 +7,12 @@ entity headbang_bot is port
 	CLOCK_50 : in std_logic;
 
 	-- servo control
-	BPM : in std_logic_vector(9 downto 0);
 	SERVO : out std_logic;
 	
 	-- display
 	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6) := (others => '1');
 	LEDR : out std_logic_vector(17 downto 0);
+	LEDG : out std_logic_vector(8 downto 0);
 	
 	-- user control
 	SW : in std_logic_vector(17 downto 0);
@@ -39,10 +39,33 @@ end entity;
 
 architecture rtl of headbang_bot is
 
---	signal clk_bpm: std_logic := '0';
---	signal direction: integer := 0;
-		
-	component audio_codec is port
+	signal clk_bpm: std_logic := '0';
+	signal direction: integer := 0;
+
+	-- SRAM general
+	signal read_n, write_n, clear_sram, clear_done: std_logic := '0';
+	signal sram_data_input, sram_data_output: std_logic_vector(15 downto 0);
+	signal sram_address: std_logic_vector(19 downto 0);
+	
+	-- SRAM states
+	type sram_control_types is (user_control, beat_control);
+	signal sram_state: sram_control_types;
+	
+	-- SRAM user_control
+	signal read_n_user_control, write_n_user_control, clear_sram_user_control : std_logic;
+	signal data_input_user_control : std_logic_vector(15 downto 0);
+	signal addr_user_control : std_logic_vector(19 downto 0);
+	signal data_output_user_control : std_logic_vector(15 downto 0);
+	signal clear_done_user_control: std_logic;
+	
+	-- SRAM beat_control 
+	signal sram_data_beat_control: std_logic_vector(15 downto 0);
+	signal sram_address_beat_control: std_logic_vector(19 downto 0);
+	signal read_n_beat_control: std_logic;
+	signal data_beat_control: std_logic_vector(15 downto 0);
+	signal address_beat_control: std_logic_vector(19 downto 0);
+	
+	component audio_player is port
 	(
 		clk, reset, play: in std_logic;
 		SDIN: inout std_logic;
@@ -53,8 +76,76 @@ architecture rtl of headbang_bot is
 		ACK_LEDR: out std_logic_vector(2 downto 0)
 	);
 	end component;
-
+	
+	signal bpm: std_logic_vector(9 downto 0);
+	signal clk_count: std_logic_vector(20 downto 0);
 begin
+	process(CLOCK_50)
+	begin
+		clk_count <= std_logic_vector(unsigned(clk_count) + 1);
+	end process;
+	--audio: audio_player port map
+	--(
+		--clk => CLOCK_50,
+		--reset => KEY(0),
+		--SW0 => SW(0),
+		--SDIN => I2C_SDAT,
+		--SCLK => I2C_SCLK,
+		--USB_clk => AUD_XCK,
+		--BCLK => AUD_BCLK,
+		--DAC_LR_CLK => AUD_DACLRCK,
+		--DAC_DATA => AUD_DACDAT,
+		--ACK_LEDR => LEDR(2 downto 0)
+	--);
+	
+	
+	beat_controller: entity work.beat_controller port map(
+		  CLOCK_50 => CLOCK_50,
+		  clk_count => clk_count,
+		  bpm => bpm,
+		  enabled => KEY(3),
+		  servo_pin => SERVO,
+
+		  --sram
+		  read_n => read_n_beat_control,
+		  data => data_beat_control,
+		  address => address_beat_control
+	);
+	
+	sram_user_control: entity work.sram_user_control port map
+	(
+		key => KEY(2 downto 0), -- KEY,
+		sw => SW, -- SW,
+		ledr => LEDR,
+		ledg => LEDG,
+		read_n => read_n_user_control,
+		write_n => write_n_user_control, 
+		clear_sram => clear_sram_user_control,
+		data_input => data_input_user_control,
+		addr_input => addr_user_control,
+		data_output => data_output_user_control,
+		clear_done => clear_done_user_control
+	);
+	
+	sram_controller: entity work.sram_controller port map
+	(
+		clk => CLOCK_50,
+		read_n => read_n,
+		write_n => write_n,
+		clear_sram => clear_sram,
+		data_input => sram_data_input,
+		addr_input => sram_address,
+		data_output => sram_data_output,
+		clear_done => clear_done,
+		
+		data => SRAM_DQ,
+		address => SRAM_ADDR,
+		output_enable_n => SRAM_OE_N,
+		write_enable_n => SRAM_WE_N,
+		chip_select_n => SRAM_CE_N,
+		ub_n => SRAM_UB_N,
+		lb_n => SRAM_LB_N 
+	);
 
 	aud_player: audio_codec port map
 	(
@@ -114,60 +205,96 @@ begin
 --		sdram_we_n => DRAM_WE_N
 --	);
 
---	sp: entity work.servo_prescaler port map
---	(
---		CLOCK_50,
---		std_logic_vector(signed(bpm) * 100),
---		clk_bpm
---	);
---	
---	sc: entity work.servo_controller port map
---	(
---		CLOCK_50, 
---		direction,
---		servo
---	);
---	
---	hx: entity work.bpm_hex port map
---	(
---		bpm, 
---		HEX0, 
---		HEX1, 
---		HEX2
---	);
---	
---	process(clk_bpm)
---	
---		variable counter : integer := 0;
---		variable directionp: integer := 0;
---		variable servop: integer := 0;
---		
---	begin 
---		
---		if rising_edge(clk_bpm) then
---		
---			if counter > 200 then
---			
---				counter := 0;
---				
---			end if;
---			
---			counter := counter + 1;
---			
---			if counter = 1 then
---			
---				directionp := 1;
---				
---			elsif counter = 101 then
---			
---				directionp := 2;
---				
---			end if;
---			
---			direction <= directionp;
---			
---		end if;
---		
---	end process;
+	--sp: entity work.servo_prescaler port map
+	--(
+		--CLOCK_50,
+		--std_logic_vector(signed(bpm) * 100),
+		--clk_bpm
+	--);
+	
+	--sc: entity work.servo_controller port map
+	--(
+		--CLOCK_50, 
+		--direction,
+		--servo
+	--);
+	
+	hx: entity work.bpm_hex port map
+	(
+		bpm, 
+		HEX0, 
+		HEX1, 
+		HEX2
+	);
+	
+	process(clk_bpm)
+	
+		variable counter : integer := 0;
+		variable directionp: integer := 0;
+		variable servop: integer := 0;
+		
+	begin 
+		
+		if rising_edge(clk_bpm) then
+		
+			if counter > 200 then
+			
+				counter := 0;
+				
+			end if;
+			
+			counter := counter + 1;
+			
+			if counter = 1 then
+			
+				directionp := 1;
+				
+			elsif counter = 101 then
+			
+				directionp := 2;
+				
+			end if;
+			
+			direction <= directionp;
+			
+		end if;
+		
+	end process;
+	
+	process(clear_done) 
+	begin
+		if clear_done = '1' then
+			clear_sram <= '0';
+		end if;
+		
+		if sram_state <= user_control then
+			read_n <= read_n_user_control;
+			write_n <= write_n_user_control;
+			clear_sram <= clear_sram_user_control;
+			clear_done <= clear_done_user_control;
+			sram_data_input <= data_input_user_control;
+			sram_data_output <= data_output_user_control;
+			sram_address <= addr_user_control;
+		elsif sram_state <= beat_control then
+			read_n <= read_n_beat_control;
+			write_n <= '0';
+			sram_data_output <= data_beat_control;
+			sram_address <= address_beat_control;
+		end if;
+
+	end process;
+	
+	process(KEY(3))
+	begin
+		if rising_edge(KEY(3)) then
+			if sram_state <= user_control then
+				sram_state <= beat_control;
+			elsif sram_state <= beat_control then
+				sram_state <= user_control;
+			else
+				sram_state <= user_control;
+			end if;
+		end if;
+	end process;
 	
 end architecture;
