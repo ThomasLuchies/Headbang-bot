@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity beat_detection is generic
 (
 	TRESHOLD: integer range 0 to 32768 := 29000;
-	SERVO_ASSERT_DELAY: integer := 2
+	SERVO_ASSERT_DELAY: integer := 80
 );
 port
 (

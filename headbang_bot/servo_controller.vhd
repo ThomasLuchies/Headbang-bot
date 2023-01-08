@@ -16,9 +16,7 @@ port
 end entity;
 
 architecture servo_controller_arch of servo_controller is
-	signal clk1000: std_logic := '0';
 	signal servo_clk: std_logic := '0';
-	signal wait_time: integer := 0;
 begin
 	process(clki)
 		variable counter: integer := 0;
