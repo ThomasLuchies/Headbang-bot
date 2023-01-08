@@ -33,11 +33,13 @@ DEFINE irq_mapper                                 ./libraries/irq_mapper/
 DEFINE mm_interconnect_0                          ./libraries/mm_interconnect_0/                         
 DEFINE switches                                   ./libraries/switches/                                  
 DEFINE sdram                                      ./libraries/sdram/                                     
+DEFINE red_leds                                   ./libraries/red_leds/                                  
 DEFINE onchip_memory2                             ./libraries/onchip_memory2/                            
 DEFINE nios2_gen2                                 ./libraries/nios2_gen2/                                
-DEFINE leds                                       ./libraries/leds/                                      
 DEFINE jtag_uart                                  ./libraries/jtag_uart/                                 
-DEFINE ADC_DATA                                   ./libraries/ADC_DATA/                                  
+DEFINE green_leds                                 ./libraries/green_leds/                                
+DEFINE AUD_DAT                                    ./libraries/AUD_DAT/                                   
+DEFINE ADC_LR_CLK                                 ./libraries/ADC_LR_CLK/                                
 DEFINE altera_ver                                 ./libraries/altera_ver/                                
 DEFINE lpm_ver                                    ./libraries/lpm_ver/                                   
 DEFINE sgate_ver                                  ./libraries/sgate_ver/                                 

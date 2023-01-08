@@ -13,6 +13,7 @@ entity headbang_bot is port
 	-- display
 	HEX0,	HEX1,	HEX2: out std_logic_vector(0 to 6) := (others => '1');
 	LEDR : out std_logic_vector(17 downto 0);
+	LEDG : out std_logic_vector(8 downto 0);
 	
 	-- user control
 	SW : in std_logic_vector(17 downto 0);
@@ -41,8 +42,9 @@ architecture rtl of headbang_bot is
 
 	signal clk_bpm: std_logic := '0';
 	signal direction: integer := 0;
-	signal adc_lr_clk, bclk, dac_data, dac_lr_clk, adc_data : std_logic;
-		
+	signal aud_adc_lr_ck: std_logic;			--adc lr clk
+	signal aud_adc_data: std_logic_vector(31 downto 0) := (others => '0');			--adc data
+	
 	component audio_codec is port
 	(
 		clk, reset, play: in std_logic;
@@ -51,17 +53,18 @@ architecture rtl of headbang_bot is
 		DAC_LR_CLK, ADC_LR_CLK: out std_logic;
 		DAC_DATA: out std_logic;
 		ADC_DATA: in std_logic;
-		ACK_LEDR: out std_logic_vector(2 downto 0)
+		ACK_LEDR: out std_logic_vector(2 downto 0);
+		ADC_DATA_Combined: out std_logic_vector(31 downto 0)
 	);
 	end component;
 	
 	component audioqsys is port
 	(
-		adc_data_export   : in    std_logic                     := 'X';             -- export
-		adc_lr_clk_export : in    std_logic                     := 'X';             -- export
-		bclk_export       : in    std_logic                     := 'X';             -- export
+		adc_lr_clk_export : in    std_logic;                                        -- export
+		aud_dat_export    : in    std_logic_vector(31 downto 0);                    -- export
 		clk_clk           : in    std_logic                     := 'X';             -- clk
-		leds_export       : out   std_logic_vector(17 downto 0);                    -- export
+		green_leds_export : out   std_logic_vector(8 downto 0);                     -- export
+		red_leds_export   : out   std_logic_vector(17 downto 0);                    -- export
 		sdram_addr        : out   std_logic_vector(12 downto 0);                    -- addr
 		sdram_ba          : out   std_logic_vector(1 downto 0);                     -- ba
 		sdram_cas_n       : out   std_logic;                                        -- cas_n
@@ -77,11 +80,7 @@ architecture rtl of headbang_bot is
 
 begin
 
-	AUD_DACDAT <= dac_data;
-	adc_data <= AUD_ADCDAT;
-	AUD_BCLK <= bclk;
-	AUD_ADCLRCK <= adc_lr_clk;
-	AUD_DACLRCK <= dac_lr_clk;
+	AUD_ADCLRCK <= aud_adc_lr_ck; --adc lr clk
 
 	aud_player: audio_codec port map
 	(
@@ -91,11 +90,12 @@ begin
 		SDIN => I2C_SDAT,
 		SCLK => I2C_SCLK,
 		USB_clk => AUD_XCK,
-		BCLK => bclk,
-		DAC_LR_CLK => dac_lr_clk,
-		ADC_LR_CLK => adc_lr_clk,
-		DAC_DATA => dac_data,
-		ADC_DATA => adc_data
+		BCLK => AUD_BCLK,
+		DAC_LR_CLK => AUD_DACLRCK,
+		ADC_LR_CLK => aud_adc_lr_ck,
+		DAC_DATA => AUD_DACDAT,
+		ADC_DATA => AUD_ADCDAT,
+		ADC_DATA_Combined => aud_adc_data
 		--ACK_LEDR => LEDR(2 downto 0)
 	);
 	
@@ -123,7 +123,7 @@ begin
 	audio_qsys: audioqsys port map
 	(
 		clk_clk => CLOCK_50,
-		leds_export => LEDR,
+		red_leds_export => LEDR,
 		switches_export => SW,
 		sdram_addr => DRAM_ADDR,
 		sdram_ba => DRAM_BA,
@@ -134,9 +134,9 @@ begin
 		sdram_dqm => DRAM_DQM,
 		sdram_ras_n => DRAM_RAS_N,
 		sdram_we_n => DRAM_WE_N,
-		adc_lr_clk_export => adc_lr_clk, 		-- adc_lr_clk.export
-		adc_data_export   => adc_data,  			--   adc_data.export
-		bclk_export       => bclk       			--       bclk.export
+		aud_dat_export   => aud_adc_data,
+		adc_lr_clk_export => aud_adc_lr_ck,
+		green_leds_export => LEDG
 	);
 
 --	sp: entity work.servo_prescaler port map

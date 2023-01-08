@@ -1,9 +1,21 @@
-22:53:35 **** Incremental Build of configuration Nios II for project headbang-bot ****
+16:47:00 **** Incremental Build of configuration Nios II for project headbang-bot ****
 make all 
 Info: Building ../headbang-bot_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../headbang-bot_bsp/
-[BSP build complete]
-[headbang-bot build complete]
+Makefile not up to date.
+../../audioqsys.sopcinfo has been modified since the BSP was generated.
 
-22:53:36 Build Finished (took 702ms)
+Generate the BSP to update the Makefile, and then build again.
+
+To generate from Eclipse:
+ 1. Right-click the BSP project.
+ 2. In the Nios II Menu, click Generate BSP.
+
+To generate from the command line:
+ nios2-bsp-generate-files --settings=<settings file> --bsp-dir=<target bsp files directory>
+
+make[1]: *** [public.mk] Error 1
+make: *** [../headbang-bot_bsp/-recurs-make-lib] Error 2
+
+16:47:01 Build Finished (took 752ms)
 

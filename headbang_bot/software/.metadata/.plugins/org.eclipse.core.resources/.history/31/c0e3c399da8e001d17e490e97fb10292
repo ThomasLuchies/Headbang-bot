@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <system.h>
+#include <io.h>
+#include <unistd.h>
+#include <string.h>
+
+int main(void)
+{
+	signed int ADC_DATA_BUFF = 0;
+	signed int ADC_DATA_BUFF_LEFT = 0;
+	signed int ADC_DATA_BUFF_RIGHT = 0;
+	unsigned int ADC_CLK = 0;
+	unsigned int ADC_CLK_save = 0;
+
+	while(1)
+	{
+		ADC_CLK = IORD(ADC_LR_CLK_BASE, 0);
+
+		if(ADC_CLK_save != ADC_CLK)
+		{
+			//if different from last check, 1 -> 0 or 0 -> 1
+			ADC_CLK_save = ADC_CLK;
+
+			if(ADC_CLK_save)
+			{
+				//if high (1)
+				ADC_DATA_BUFF = IORD(AUD_DAT_BASE, 0);
+				ADC_DATA_BUFF_LEFT = ADC_DATA_BUFF<<16;
+				ADC_DATA_BUFF_RIGHT = ADC_DATA_BUFF>>16;
+				printf("%i \r\n", IORD(AUD_DAT_BASE, 0));
+//				for(int i = 0; i < 32; i++)
+//				{
+//					printf("%i ", ADC_DATA_BUFF[i]);
+//				}
+//				printf("\r\n");
+			}
+		}
+	}
+}

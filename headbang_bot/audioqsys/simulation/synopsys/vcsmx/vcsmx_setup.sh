@@ -1,5 +1,5 @@
 
-# (C) 2001-2022 Altera Corporation. All rights reserved.
+# (C) 2001-2023 Altera Corporation. All rights reserved.
 # Your use of Altera Corporation's design tools, logic functions and 
 # other software and tools, and its AMPP partner logic functions, and 
 # any output files any of the foregoing (including device programming 
@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 18.1 625 win32 2022.12.13.21:30:48
+# ACDS 18.1 625 win32 2023.01.06.15:43:23
 
 # ----------------------------------------
 # vcsmx - auto-generated simulation script
@@ -107,7 +107,7 @@
 # within the Quartus project, and generate a unified
 # script which supports all the Altera IP within the design.
 # ----------------------------------------
-# ACDS 18.1 625 win32 2022.12.13.21:30:48
+# ACDS 18.1 625 win32 2023.01.06.15:43:23
 # ----------------------------------------
 # initialize variables
 TOP_LEVEL_NAME="audioqsys"
@@ -171,11 +171,13 @@ mkdir -p ./libraries/irq_mapper/
 mkdir -p ./libraries/mm_interconnect_0/
 mkdir -p ./libraries/switches/
 mkdir -p ./libraries/sdram/
+mkdir -p ./libraries/red_leds/
 mkdir -p ./libraries/onchip_memory2/
 mkdir -p ./libraries/nios2_gen2/
-mkdir -p ./libraries/leds/
 mkdir -p ./libraries/jtag_uart/
-mkdir -p ./libraries/ADC_DATA/
+mkdir -p ./libraries/green_leds/
+mkdir -p ./libraries/AUD_DAT/
+mkdir -p ./libraries/ADC_LR_CLK/
 mkdir -p ./libraries/altera_ver/
 mkdir -p ./libraries/lpm_ver/
 mkdir -p ./libraries/sgate_ver/
@@ -268,11 +270,13 @@ if [ $SKIP_COM -eq 0 ]; then
   vlogan +v2k $USER_DEFINED_VERILOG_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS           "$QSYS_SIMDIR/submodules/audioqsys_mm_interconnect_0.v"                                    -work mm_interconnect_0                         
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_switches.vhd"                                           -work switches                                  
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_sdram.vhd"                                              -work sdram                                     
+  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_red_leds.vhd"                                           -work red_leds                                  
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_onchip_memory2.vhd"                                     -work onchip_memory2                            
   vlogan +v2k $USER_DEFINED_VERILOG_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS           "$QSYS_SIMDIR/submodules/audioqsys_nios2_gen2.v"                                           -work nios2_gen2                                
-  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_leds.vhd"                                               -work leds                                      
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_jtag_uart.vhd"                                          -work jtag_uart                                 
-  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_ADC_DATA.vhd"                                           -work ADC_DATA                                  
+  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_green_leds.vhd"                                         -work green_leds                                
+  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_AUD_DAT.vhd"                                            -work AUD_DAT                                   
+  vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/submodules/audioqsys_ADC_LR_CLK.vhd"                                         -work ADC_LR_CLK                                
   vhdlan -xlrm $USER_DEFINED_VHDL_COMPILE_OPTIONS $USER_DEFINED_COMPILE_OPTIONS             "$QSYS_SIMDIR/audioqsys.vhd"                                                                                                               
 fi
 

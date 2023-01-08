@@ -47,7 +47,7 @@ module audioqsys_mm_interconnect_0_router_001_default_decode
      parameter DEFAULT_CHANNEL = 1,
                DEFAULT_WR_CHANNEL = -1,
                DEFAULT_RD_CHANNEL = -1,
-               DEFAULT_DESTID = 6 
+               DEFAULT_DESTID = 5 
    )
   (output [92 - 89 : 0] default_destination_id,
    output [9-1 : 0] default_wr_channel,
@@ -192,13 +192,13 @@ module audioqsys_mm_interconnect_0_router_001
     // ( 0x8020000 .. 0x8040000 )
     if ( {address[RG:PAD0],{PAD0{1'b0}}} == 28'h8020000   ) begin
             src_channel = 9'b10;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 6;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;
     end
 
     // ( 0x8040800 .. 0x8041000 )
     if ( {address[RG:PAD1],{PAD1{1'b0}}} == 28'h8040800   ) begin
             src_channel = 9'b01;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 4;
     end
 
 end

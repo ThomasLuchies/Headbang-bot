@@ -185,6 +185,10 @@
    type="VHDL"
    library="sdram" />
  <file
+   path="simulation/submodules/audioqsys_red_leds.vhd"
+   type="VHDL"
+   library="red_leds" />
+ <file
    path="simulation/submodules/audioqsys_onchip_memory2.hex"
    type="HEX"
    library="onchip_memory2" />
@@ -197,17 +201,21 @@
    type="VERILOG"
    library="nios2_gen2" />
  <file
-   path="simulation/submodules/audioqsys_leds.vhd"
-   type="VHDL"
-   library="leds" />
- <file
    path="simulation/submodules/audioqsys_jtag_uart.vhd"
    type="VHDL"
    library="jtag_uart" />
  <file
-   path="simulation/submodules/audioqsys_ADC_DATA.vhd"
+   path="simulation/submodules/audioqsys_green_leds.vhd"
    type="VHDL"
-   library="ADC_DATA" />
+   library="green_leds" />
+ <file
+   path="simulation/submodules/audioqsys_AUD_DAT.vhd"
+   type="VHDL"
+   library="AUD_DAT" />
+ <file
+   path="simulation/submodules/audioqsys_ADC_LR_CLK.vhd"
+   type="VHDL"
+   library="ADC_LR_CLK" />
  <file path="simulation/audioqsys.vhd" type="VHDL" />
  <topLevel name="audioqsys" />
  <deviceFamily name="cycloneive" />

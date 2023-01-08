@@ -26,11 +26,13 @@ irq_mapper:                                 ./libraries/irq_mapper/
 mm_interconnect_0:                          ./libraries/mm_interconnect_0/                         
 switches:                                   ./libraries/switches/                                  
 sdram:                                      ./libraries/sdram/                                     
+red_leds:                                   ./libraries/red_leds/                                  
 onchip_memory2:                             ./libraries/onchip_memory2/                            
 nios2_gen2:                                 ./libraries/nios2_gen2/                                
-leds:                                       ./libraries/leds/                                      
 jtag_uart:                                  ./libraries/jtag_uart/                                 
-ADC_DATA:                                   ./libraries/ADC_DATA/                                  
+green_leds:                                 ./libraries/green_leds/                                
+AUD_DAT:                                    ./libraries/AUD_DAT/                                   
+ADC_LR_CLK:                                 ./libraries/ADC_LR_CLK/                                
 altera_ver:                                 ./libraries/altera_ver/                                
 lpm_ver:                                    ./libraries/lpm_ver/                                   
 sgate_ver:                                  ./libraries/sgate_ver/                                 

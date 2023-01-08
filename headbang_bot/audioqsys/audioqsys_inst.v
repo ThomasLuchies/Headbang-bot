@@ -1,9 +1,9 @@
 	audioqsys u0 (
-		.adc_data_export   (<connected-to-adc_data_export>),   //   adc_data.export
 		.adc_lr_clk_export (<connected-to-adc_lr_clk_export>), // adc_lr_clk.export
-		.bclk_export       (<connected-to-bclk_export>),       //       bclk.export
+		.aud_dat_export    (<connected-to-aud_dat_export>),    //    aud_dat.export
 		.clk_clk           (<connected-to-clk_clk>),           //        clk.clk
-		.leds_export       (<connected-to-leds_export>),       //       leds.export
+		.green_leds_export (<connected-to-green_leds_export>), // green_leds.export
+		.red_leds_export   (<connected-to-red_leds_export>),   //   red_leds.export
 		.sdram_addr        (<connected-to-sdram_addr>),        //      sdram.addr
 		.sdram_ba          (<connected-to-sdram_ba>),          //           .ba
 		.sdram_cas_n       (<connected-to-sdram_cas_n>),       //           .cas_n

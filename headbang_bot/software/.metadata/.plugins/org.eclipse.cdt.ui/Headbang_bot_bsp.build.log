@@ -1,4 +1,4 @@
-22:53:33 **** Incremental Build of configuration Nios II for project Headbang_bot_bsp ****
+16:47:02 **** Incremental Build of configuration Nios II for project headbang_bot_bsp ****
 make all 
 Makefile not up to date.
 ../../audioqsys.sopcinfo has been modified since the BSP was generated.
@@ -14,5 +14,5 @@ To generate from the command line:
 
 make: *** [public.mk] Error 1
 
-22:53:33 Build Finished (took 699ms)
+16:47:03 Build Finished (took 650ms)
 

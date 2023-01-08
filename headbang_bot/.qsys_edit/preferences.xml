@@ -13,5 +13,6 @@
    synthesis="VHDL"
    simulation="VHDL"
    block_symbol_file="0"
-   path="_PROJECT_NAME_" />
+   path="_PROJECT_NAME_"
+   greybox="1" />
 </preferences>

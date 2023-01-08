@@ -210,37 +210,37 @@ module audioqsys_mm_interconnect_0_router
     // ( 0x8020000 .. 0x8040000 )
     if ( {address[RG:PAD1],{PAD1{1'b0}}} == 28'h8020000   ) begin
             src_channel = 9'b000010000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 6;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;
     end
 
     // ( 0x8040800 .. 0x8041000 )
     if ( {address[RG:PAD2],{PAD2{1'b0}}} == 28'h8040800   ) begin
             src_channel = 9'b000000010;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 4;
     end
 
     // ( 0x8041000 .. 0x8041010 )
     if ( {address[RG:PAD3],{PAD3{1'b0}}} == 28'h8041000  && read_transaction  ) begin
             src_channel = 9'b100000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 2;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 0;
     end
 
     // ( 0x8041010 .. 0x8041020 )
     if ( {address[RG:PAD4],{PAD4{1'b0}}} == 28'h8041010  && read_transaction  ) begin
             src_channel = 9'b010000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 0;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 1;
     end
 
     // ( 0x8041020 .. 0x8041030 )
-    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 28'h8041020  && read_transaction  ) begin
+    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 28'h8041020   ) begin
             src_channel = 9'b001000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 1;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 2;
     end
 
     // ( 0x8041030 .. 0x8041040 )
     if ( {address[RG:PAD6],{PAD6{1'b0}}} == 28'h8041030   ) begin
             src_channel = 9'b000001000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 4;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 6;
     end
 
     // ( 0x8041040 .. 0x8041050 )
