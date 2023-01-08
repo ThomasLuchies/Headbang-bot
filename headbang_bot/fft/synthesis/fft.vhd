@@ -24,8 +24,8 @@ entity fft is
 		source_error : out std_logic_vector(1 downto 0);                     --       .source_error
 		source_sop   : out std_logic;                                        --       .source_sop
 		source_eop   : out std_logic;                                        --       .source_eop
-		source_real  : out std_logic_vector(15 downto 0);                    --       .source_real
-		source_imag  : out std_logic_vector(15 downto 0);                    --       .source_imag
+		source_real  : out std_logic_vector(19 downto 0);                    --       .source_real
+		source_imag  : out std_logic_vector(19 downto 0);                    --       .source_imag
 		fftpts_out   : out std_logic_vector(11 downto 0)                     --       .fftpts_out
 	);
 end entity fft;
@@ -49,8 +49,8 @@ architecture rtl of fft is
 			source_error : out std_logic_vector(1 downto 0);                     -- source_error
 			source_sop   : out std_logic;                                        -- source_sop
 			source_eop   : out std_logic;                                        -- source_eop
-			source_real  : out std_logic_vector(15 downto 0);                    -- source_real
-			source_imag  : out std_logic_vector(15 downto 0);                    -- source_imag
+			source_real  : out std_logic_vector(19 downto 0);                    -- source_real
+			source_imag  : out std_logic_vector(19 downto 0);                    -- source_imag
 			fftpts_out   : out std_logic_vector(11 downto 0)                     -- fftpts_out
 		);
 	end component fft_fft_ii_0;

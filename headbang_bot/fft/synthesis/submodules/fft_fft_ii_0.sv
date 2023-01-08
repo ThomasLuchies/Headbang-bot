@@ -30,8 +30,8 @@ module fft_fft_ii_0 (
 	output source_sop,
 	output source_eop,
 	output source_valid,
-	output [15 : 0] source_real,
-	output [15 : 0] source_imag
+	output [19 : 0] source_real,
+	output [19 : 0] source_imag
 	);
 
 	auk_dspip_r22sdf_top #(
@@ -40,14 +40,14 @@ module fft_fft_ii_0 (
 		.NUM_STAGES_g(6),
 		.DATAWIDTH_g(16),
 		.TWIDWIDTH_g(18),
-		.MAX_GROW_g (0),
+		.MAX_GROW_g (4),
 		.TWIDROM_BASE_g("fft_fft_ii_0_"),
 		.DSP_ROUNDING_g(0),
 		.INPUT_FORMAT_g("NATURAL_ORDER"),
 		.OUTPUT_FORMAT_g("NATURAL_ORDER"),
 		.REPRESENTATION_g("FIXEDPT"),
 		.DSP_ARCH_g(0),
-        .PRUNE_g("2,2,2,3,2,0") 
+        .PRUNE_g("2,2,2,1,0,0") 
 	)
 	auk_dspip_r22sdf_top_inst (
 		.clk(clk),

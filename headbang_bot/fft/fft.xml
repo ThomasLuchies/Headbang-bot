@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy
- date="2022.12.16.15:15:26"
+ date="2023.01.08.00:41:13"
  outputDirectory="D:/Vcs/Headbang-bot/headbang_bot/fft/">
  <perimeter>
   <parameter
@@ -83,20 +83,20 @@
    <port name="source_error" direction="output" role="source_error" width="2" />
    <port name="source_sop" direction="output" role="source_sop" width="1" />
    <port name="source_eop" direction="output" role="source_eop" width="1" />
-   <port name="source_real" direction="output" role="source_real" width="16" />
-   <port name="source_imag" direction="output" role="source_imag" width="16" />
+   <port name="source_real" direction="output" role="source_real" width="20" />
+   <port name="source_imag" direction="output" role="source_imag" width="20" />
    <port name="fftpts_out" direction="output" role="fftpts_out" width="12" />
   </interface>
  </perimeter>
  <entity
    path=""
-   parameterizationKey="fft:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=EP4CE115F29C7,AUTO_DEVICE_FAMILY=Cyclone IV E,AUTO_DEVICE_SPEEDGRADE=7,AUTO_GENERATION_ID=1671200125,AUTO_UNIQUE_ID=(altera_fft_ii:18.1:CALC_LATENCY=2048,THROUGHPUT_LATENCY=4096,data_flow=Variable Streaming,data_rep=Fixed Point,design_env=NATIVE,direction=Bi-directional,dsp_resource_opt=false,engine_arch=Quad Output,hard_fp=false,hyper_opt=false,in_order=Natural,in_width=16,in_width_derived=16,length=2048,num_engines=1,num_engines_derived=1,out_order=Natural,out_width=16,out_width_derived=16,selected_device_family=Cyclone IV E,twid_width=18,twid_width_derived=18)"
+   parameterizationKey="fft:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=EP4CE115F29C7,AUTO_DEVICE_FAMILY=Cyclone IV E,AUTO_DEVICE_SPEEDGRADE=7,AUTO_GENERATION_ID=1673134872,AUTO_UNIQUE_ID=(altera_fft_ii:18.1:CALC_LATENCY=2048,THROUGHPUT_LATENCY=4096,data_flow=Variable Streaming,data_rep=Fixed Point,design_env=NATIVE,direction=Bi-directional,dsp_resource_opt=false,engine_arch=Quad Output,hard_fp=false,hyper_opt=false,in_order=Natural,in_width=16,in_width_derived=16,length=2048,num_engines=1,num_engines_derived=1,out_order=Natural,out_width=20,out_width_derived=20,selected_device_family=Cyclone IV E,twid_width=18,twid_width_derived=18)"
    instancePathKey="fft"
    kind="fft"
    version="1.0"
    name="fft">
   <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_GENERATION_ID" value="1671200125" />
+  <parameter name="AUTO_GENERATION_ID" value="1673134872" />
   <parameter name="AUTO_DEVICE" value="EP4CE115F29C7" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
   <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />
@@ -356,7 +356,7 @@
  </entity>
  <entity
    path="submodules/"
-   parameterizationKey="altera_fft_ii:18.1:CALC_LATENCY=2048,THROUGHPUT_LATENCY=4096,data_flow=Variable Streaming,data_rep=Fixed Point,design_env=NATIVE,direction=Bi-directional,dsp_resource_opt=false,engine_arch=Quad Output,hard_fp=false,hyper_opt=false,in_order=Natural,in_width=16,in_width_derived=16,length=2048,num_engines=1,num_engines_derived=1,out_order=Natural,out_width=16,out_width_derived=16,selected_device_family=Cyclone IV E,twid_width=18,twid_width_derived=18"
+   parameterizationKey="altera_fft_ii:18.1:CALC_LATENCY=2048,THROUGHPUT_LATENCY=4096,data_flow=Variable Streaming,data_rep=Fixed Point,design_env=NATIVE,direction=Bi-directional,dsp_resource_opt=false,engine_arch=Quad Output,hard_fp=false,hyper_opt=false,in_order=Natural,in_width=16,in_width_derived=16,length=2048,num_engines=1,num_engines_derived=1,out_order=Natural,out_width=20,out_width_derived=20,selected_device_family=Cyclone IV E,twid_width=18,twid_width_derived=18"
    instancePathKey="fft:.:fft_ii_0"
    kind="altera_fft_ii"
    version="18.1"
@@ -377,9 +377,9 @@
   <parameter name="in_width" value="16" />
   <parameter name="engine_arch" value="Quad Output" />
   <parameter name="data_flow" value="Variable Streaming" />
-  <parameter name="out_width" value="16" />
+  <parameter name="out_width" value="20" />
   <parameter name="num_engines" value="1" />
-  <parameter name="out_width_derived" value="16" />
+  <parameter name="out_width_derived" value="20" />
   <parameter name="hard_fp" value="false" />
   <parameter name="twid_width" value="18" />
   <parameter name="direction" value="Bi-directional" />

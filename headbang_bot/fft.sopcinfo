@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="fft" kind="fft" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2022.12.16.15:15:25 -->
+ <!-- 2023.01.08.00:41:12 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1671200125</value>
+  <value>1673134872</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -157,7 +157,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="out_width">
    <type>int</type>
-   <value>16</value>
+   <value>20</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -165,7 +165,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="out_width_derived">
    <type>int</type>
-   <value>16</value>
+   <value>20</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -550,13 +550,13 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>source_real</name>
     <direction>Output</direction>
-    <width>16</width>
+    <width>20</width>
     <role>source_real</role>
    </port>
    <port>
     <name>source_imag</name>
     <direction>Output</direction>
-    <width>16</width>
+    <width>20</width>
     <role>source_imag</role>
    </port>
    <port>

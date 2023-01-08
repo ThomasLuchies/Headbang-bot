@@ -6,7 +6,7 @@
    version="1.0"
    description=""
    tags="INTERNAL_COMPONENT=true"
-   categories="" />
+   categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
    element fft_ii_0
@@ -31,7 +31,7 @@
  <parameter name="hideFromIPCatalog" value="true" />
  <parameter name="lockedInterfaceDefinition" value="" />
  <parameter name="maxAdditionalLatency" value="1" />
- <parameter name="projectName" value="" />
+ <parameter name="projectName" value="headbang_bot.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="0" />
  <parameter name="testBenchDutName" value="" />
@@ -84,7 +84,7 @@
   <parameter name="length" value="2048" />
   <parameter name="num_engines" value="1" />
   <parameter name="out_order" value="Natural" />
-  <parameter name="out_width" value="16" />
+  <parameter name="out_width" value="20" />
   <parameter name="selected_device_family" value="Cyclone IV E" />
   <parameter name="twid_width" value="18" />
  </module>

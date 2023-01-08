@@ -23,7 +23,7 @@ begin
 	process (clk)
 		variable start_to_fill: std_logic;
 	begin
-		if rising_edge(clk) then
+		if falling_edge(clk) then
 			if reset = '1' then
 				channel_index <= 0;
 				fill_channels <= '1';

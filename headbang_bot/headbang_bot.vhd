@@ -44,7 +44,7 @@ architecture rtl of headbang_bot is
    signal direction: integer := 0;
 	signal adc_lr_clk, bclk, dac_data, dac_lr_clk: std_logic;
 	signal first_channel: std_logic_vector(15 downto 0);
-	signal sink_valid, sink_sop, sink_eop: std_logic;
+	signal reset_n, sink_valid, sink_sop, sink_eop: std_logic;
 	signal first_fft_source_sop, first_fft_source_eop: std_logic;
 		
 	component audio_codec is port
@@ -99,24 +99,24 @@ architecture rtl of headbang_bot is
 
 	component fft is port
 	(
-		clk: in std_logic := '0';
-		reset_n: in std_logic := '0';
-		sink_valid: in std_logic := '0';
+		clk: in std_logic;
+		reset_n: in std_logic;
+		sink_valid: in std_logic;
 		sink_ready: out std_logic;
-		sink_error: in std_logic_vector(1 downto 0) := (others => '0');
+		sink_error: in std_logic_vector(1 downto 0);
 		sink_sop: in std_logic := '0';
 		sink_eop: in std_logic := '0';
-		sink_real: in std_logic_vector(15 downto 0) := (others => '0');
-		sink_imag: in std_logic_vector(15 downto 0) := (others => '0');
-		fftpts_in: in std_logic_vector(11 downto 0) := (others => '0');
-		inverse: in std_logic_vector(0 downto 0) := (others => '0');
+		sink_real: in std_logic_vector(15 downto 0);
+		sink_imag: in std_logic_vector(15 downto 0);
+		fftpts_in: in std_logic_vector(11 downto 0);
+		inverse: in std_logic_vector(0 downto 0);
 		source_valid: out std_logic;
-		source_ready: in std_logic := '0';
+		source_ready: in std_logic;
 		source_error: out std_logic_vector(1 downto 0);
 		source_sop: out std_logic;
 		source_eop: out std_logic;
-		source_real: out std_logic_vector(15 downto 0);
-		source_imag: out std_logic_vector(15 downto 0);
+		source_real: out std_logic_vector(19 downto 0);
+		source_imag: out std_logic_vector(19 downto 0);
 		fftpts_out: out std_logic_vector(11 downto 0)
 	);
 	end component;
@@ -126,7 +126,8 @@ architecture rtl of headbang_bot is
 		clk: in std_logic;
 		sink_valid: out std_logic;
 		sink_sop: out std_logic;
-		sink_eop: out std_logic
+		sink_eop: out std_logic;
+		reset_n: out std_logic
 	);
 	end component;
 	
@@ -160,13 +161,14 @@ begin
 		clk => adc_lr_clk,
 		sink_valid => sink_valid,
 		sink_sop => sink_sop,
-		sink_eop => sink_eop
+		sink_eop => sink_eop,
+		reset_n => reset_n
 	);
 	
 	first_fft_instance: fft port map
 	(
 		clk => adc_lr_clk,
-		reset_n => '1',
+		reset_n => reset_n,
 		sink_valid => sink_valid,
 		sink_ready => LEDG(3),
 		sink_error => (others => '0'),
@@ -174,12 +176,11 @@ begin
 		sink_eop => sink_eop,
 		sink_real => first_channel,
 		sink_imag => (others => '0'),
-		fftpts_in => (others => '1'),
+		fftpts_in => (11 => '1', others => '0'),
 		inverse => (others => '0'),
 		source_ready => '1',
 		source_sop => LEDG(4),
-		source_eop => LEDG(5),
-		source_real => LEDR(17 downto 2)
+		source_eop => LEDG(5)
 	);
 	
 	audio_codec_instance: audio_codec port map
@@ -218,7 +219,7 @@ begin
 		inclk0 => CLOCK_50,
 		c0 => DRAM_CLK
 	);
-	
+
 	audio_qsys: audioqsys port map
 	(
 		clk_clk => CLOCK_50,
@@ -264,37 +265,22 @@ begin
 	
 	-- vervang dit door een component a.u.b.
 	process(clk_bpm)
-	
 		variable counter : integer := 0;
 		variable directionp: integer := 0;
 		variable servop: integer := 0;
-		
 	begin 
-		
 		if rising_edge(clk_bpm) then
-		
 			if counter > 200 then
-			
 				counter := 0;
-				
 			end if;
-			
 			counter := counter + 1;
-			
 			if counter = 1 then
-			
 				directionp := 1;
-				
 			elsif counter = 101 then
-			
 				directionp := 2;
-				
 			end if;
-			
 			direction <= directionp;
-			
 		end if;
-		
 	end process;
 	
 end architecture;

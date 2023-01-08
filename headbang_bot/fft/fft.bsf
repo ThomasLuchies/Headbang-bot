@@ -138,15 +138,15 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 336 152)
 		(output)
-		(text "source_real[15..0]" (rect 0 0 70 12)(font "Arial" (font_size 8)))
-		(text "source_real[15..0]" (rect 247 141 355 152)(font "Arial" (font_size 8)))
+		(text "source_real[19..0]" (rect 0 0 70 12)(font "Arial" (font_size 8)))
+		(text "source_real[19..0]" (rect 247 141 355 152)(font "Arial" (font_size 8)))
 		(line (pt 336 152)(pt 224 152)(line_width 3))
 	)
 	(port
 		(pt 336 168)
 		(output)
-		(text "source_imag[15..0]" (rect 0 0 75 12)(font "Arial" (font_size 8)))
-		(text "source_imag[15..0]" (rect 243 157 351 168)(font "Arial" (font_size 8)))
+		(text "source_imag[19..0]" (rect 0 0 75 12)(font "Arial" (font_size 8)))
+		(text "source_imag[19..0]" (rect 243 157 351 168)(font "Arial" (font_size 8)))
 		(line (pt 336 168)(pt 224 168)(line_width 3))
 	)
 	(port
