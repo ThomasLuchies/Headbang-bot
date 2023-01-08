@@ -571,32 +571,8 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name VHDL_FILE fft_control.vhd
-set_global_assignment -name QIP_FILE fft/synthesis/fft.qip
-set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
-set_global_assignment -name VERILOG_FILE audio_codec.v
-set_global_assignment -name VERILOG_FILE i2c_protocol.v
-set_global_assignment -name VERILOG_FILE USB_Clock_PLL.v
-set_global_assignment -name QIP_FILE USB_Clock_PLL.qip
-set_global_assignment -name VHDL_FILE sdram_pll.vhd
-set_global_assignment -name QIP_FILE sdram_pll.qip
-set_global_assignment -name VHDL_FILE test.vhd
-set_global_assignment -name VHDL_FILE sram_user_control.vhd
-set_global_assignment -name VHDL_FILE sram_controller.vhd
-set_global_assignment -name VHDL_FILE servo_prescaler.vhd
-set_global_assignment -name VHDL_FILE servo_controller.vhd
-set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
-set_global_assignment -name VHDL_FILE bpm_hex.vhd
-set_global_assignment -name VHDL_FILE headbang_bot.vhd
-set_global_assignment -name VHDL_FILE "beat-detection.vhd"
-set_global_assignment -name VHDL_FILE adc_buffer.vhd
-set_global_assignment -name VHDL_FILE amplitude_visualiser.vhd
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
-set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_ENTITY_NAME sld_signaltap -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_clk -to "fft:first_fft_instance|clk" -section_id auto_signaltap_0
@@ -771,5 +747,32 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_STORAGE_QUALIFIER
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LENGTH=197" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[4] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
+set_global_assignment -name VHDL_FILE beat_detection.vhd
+set_global_assignment -name VHDL_FILE servo.vhd
+set_global_assignment -name VHDL_FILE beat_controller.vhd
+set_global_assignment -name VHDL_FILE fft_control.vhd
+set_global_assignment -name QIP_FILE fft/synthesis/fft.qip
+set_global_assignment -name QIP_FILE audioqsys/synthesis/audioqsys.qip
+set_global_assignment -name VERILOG_FILE audio_codec.v
+set_global_assignment -name VERILOG_FILE i2c_protocol.v
+set_global_assignment -name VERILOG_FILE USB_Clock_PLL.v
+set_global_assignment -name QIP_FILE USB_Clock_PLL.qip
+set_global_assignment -name VHDL_FILE sdram_pll.vhd
+set_global_assignment -name QIP_FILE sdram_pll.qip
+set_global_assignment -name VHDL_FILE test.vhd
+set_global_assignment -name VHDL_FILE sram_user_control.vhd
+set_global_assignment -name VHDL_FILE sram_controller.vhd
+set_global_assignment -name VHDL_FILE servo_prescaler.vhd
+set_global_assignment -name VHDL_FILE servo_controller.vhd
+set_global_assignment -name VHDL_FILE decoder_7digit_hex.vhd
+set_global_assignment -name VHDL_FILE bpm_hex.vhd
+set_global_assignment -name VHDL_FILE headbang_bot.vhd
+set_global_assignment -name VHDL_FILE adc_buffer.vhd
+set_global_assignment -name VHDL_FILE amplitude_visualiser.vhd
+set_global_assignment -name SIGNALTAP_FILE stp1.stp
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp

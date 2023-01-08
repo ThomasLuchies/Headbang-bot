@@ -2,41 +2,44 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity beat_controller is
-	generic(
-		  bpm_addr: unsigned(19 downto 0) := "00000000000000000000" -- 0
-		  );
-	port(
-	     CLOCK_50: in std_logic;
-		  clk_count: in std_logic_vector(20 downto 0);
-		  bpm: out std_logic_vector(9 downto 0);
-		  enabled: in std_logic;
-		  servo_pin: out std_logic;
+entity beat_controller is generic
+(
+	bpm_addr: unsigned(19 downto 0) := "00000000000000000000" -- 0
+);
+port
+(
+	CLOCK_50: in std_logic;
+	clk_count: in std_logic_vector(20 downto 0);
+	bpm: out std_logic_vector(9 downto 0);
+	enabled: in std_logic;
+	servo_pin: out std_logic;
 
-		  --sram
-		  read_n: out std_logic;
-		  data: in std_logic_vector(15 downto 0);
-		  address: out std_logic_vector(19 downto 0)
-	);
+	--sram
+	read_n: out std_logic;
+	data: in std_logic_vector(15 downto 0);
+	address: out std_logic_vector(19 downto 0)
+);
 end entity;
 
 architecture beat_controller_arch of beat_controller is
-	component prescaler is
-		generic(
-			max_cnt: integer := 25000000
-		);
-		port(
-			clki: in std_logic;
-			freq: in std_logic_vector(19 downto 0);
-			clko: out std_logic
-		);
+
+	component prescaler is generic
+	(
+		max_cnt: integer := 25000000
+	);
+	port
+	(
+		clki: in std_logic;
+		freq: in std_logic_vector(19 downto 0);
+		clko: out std_logic
+	);
 	end component;
 	
-	component servo is
-		port(
-			clki: in std_logic;
-			servo: out std_logic
-		);
+	component servo is port
+	(
+		clki: in std_logic;
+		servo: out std_logic
+	);
 	end component servo;
 	
 	signal read_n_sig: std_logic := '0';
@@ -49,18 +52,14 @@ architecture beat_controller_arch of beat_controller is
 	signal current_address: unsigned(19 downto 0) := bpm_addr;
 	signal enabled_servo: std_logic := '0';
 	signal test: integer := 2400;
+	
 begin
-	c2: prescaler port map(
+	c2: prescaler port map
+	(
 		clki => CLOCK_50,
 		freq => "00000000011111010000", --00000000001111101000
 		clko => read_clock
 	);
-		
-	--s: servo port map(
-		--clki => clk_servo, 
-		--servo => servo_pin
-	--);
-	
 	process(read_clock)
 		variable bps_counter: integer := 0;
 		variable clk_counter: integer := 0;
@@ -95,7 +94,6 @@ begin
 					else
 						servo_pin <= '0';
 					end if;
-					
 					clk_servo <= activate_servo;
 				end if;
 			end if;
