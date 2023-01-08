@@ -40,7 +40,7 @@ USB_Clock_PLL	USB_Clock_PLL_inst
 	.c1(BCLK)
 );
 
-always @(posedge BCLK) begin
+always @(negedge BCLK) begin
 	if(read_enable) begin
 		if (DAC_LR_CLK_counter == 31) DAC_LR_CLK <= 1;
 		else DAC_LR_CLK <= 0;
@@ -53,7 +53,7 @@ always @(posedge BCLK) begin
 	end
 end
 
-always @(posedge BCLK) begin
+always @(negedge BCLK) begin
 	if(read_enable) begin
 		if (ADC_LR_CLK_counter == 31) begin
 			ADC_LR_CLK <= 1;
@@ -75,7 +75,7 @@ end
 // generate 6 configuration pulses 
 always @(posedge clk)
 	begin
-	if(!reset) 
+	if(!reset)
 		begin
 		counting_state <= 0;
 		read_enable <= 0;
@@ -102,12 +102,12 @@ end
 always @(posedge SCLK) begin
 	case(counter) //MUX_input[15:9] register address, MUX_input[8:0] register data
 		0: MUX_input <= 16'h1201; // Activate control
-		1: MUX_input <= 16'h0017; // Left line in
-		2: MUX_input <= 16'h0217; // Right line in
+		1: MUX_input <= 16'h0000; // Left line in
+		2: MUX_input <= 16'h0200; // Right line in
 		3: MUX_input <= 16'h047F; // Left headphone out
 		4: MUX_input <= 16'h067F; // Right headphone out
 		5: MUX_input <= 16'h0812; // Analogue audio path control
-		6: MUX_input <= 16'h0A00; // Digital audio path control
+		6: MUX_input <= 16'h0A07; // Digital audio path control
 		7: MUX_input <= 16'h0C02; // Power down control
 		8: MUX_input <= 16'h0E23; // Digital audio interface format
 		9: MUX_input <= 16'h1001; // Sampling control
