@@ -5,6 +5,7 @@ use ieee.numeric_std.all;
 entity servo is port
 (
 	clki: in std_logic;
+	servo_clk: in std_logic;
 	servo: out std_logic
 );
 end entity servo;
@@ -39,16 +40,15 @@ architecture prescaled_servo of servo is
 begin
 	sc: servo_controller port map(clki, direction, servo);
 	
-	process(clki)
+	process(servo_clk)
 		variable counter : integer := 0;
 	begin 
-		if rising_edge(clki) then
-			if counter > 2 then
-				counter := 0;
-			end if;
-				
-			counter := counter + 1;
-			direction <= counter;
+		if servo_clk = '1' then
+			counter := 1;
+		else
+			counter := 0;
 		end if;
+		
+		direction <= counter;
 	end process;
 end architecture;
