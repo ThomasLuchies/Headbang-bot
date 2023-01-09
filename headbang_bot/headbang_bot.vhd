@@ -50,6 +50,8 @@ architecture rtl of headbang_bot is
   -- Audio general
 	signal aud_adc_lr_ck: std_logic;
 	signal aud_adc_data: std_logic_vector(31 downto 0) := (others => '0');
+	
+	signal above_treshold_first_channel, above_treshold_last_channel: std_logic;
 
 --	-- SRAM general
 --	signal read_n, write_n, clear_sram, clear_done: std_logic := '0';
@@ -75,14 +77,14 @@ architecture rtl of headbang_bot is
 --	signal address_beat_control: std_logic_vector(19 downto 0);
 
 	-- audio signals
-	signal adc_lr_clk, bclk, dac_data, dac_lr_clk: std_logic;
+	signal adc_lr_clk, bclk, dac_data, dac_lr_clk, soft_mute: std_logic;
 	signal first_channel, last_channel: std_logic_vector(15 downto 0);
 	
 	-- fft signals
 --	signal reset_n, sink_valid, sink_sop, sink_eop: std_logic;
 --	signal first_fft_source_sop, first_fft_source_eop: std_logic;
 	
-	signal headbang, above_treshold: std_logic;
+	signal headbang, above_treshold, enable_headbang: std_logic;
 	signal direction_servo: integer;
 
 	component audio_codec is port
@@ -95,26 +97,6 @@ architecture rtl of headbang_bot is
 		ADC_DATA: in std_logic;
 		ACK_LEDR: out std_logic_vector(2 downto 0);
 		ADC_DATA_Combined: out std_logic_vector(31 downto 0)
-	);
-	end component;
-	
-	component audioqsys is port
-	(
-		adc_lr_clk_export : in    std_logic;                                        -- export
-		aud_dat_export    : in    std_logic_vector(31 downto 0);                    -- export
-		clk_clk           : in    std_logic                     := 'X';             -- clk
-		green_leds_export : out   std_logic_vector(8 downto 0);                     -- export
-		red_leds_export   : out   std_logic_vector(17 downto 0);                    -- export
-		sdram_addr        : out   std_logic_vector(12 downto 0);                    -- addr
-		sdram_ba          : out   std_logic_vector(1 downto 0);                     -- ba
-		sdram_cas_n       : out   std_logic;                                        -- cas_n
-		sdram_cke         : out   std_logic;                                        -- cke
-		sdram_cs_n        : out   std_logic;                                        -- cs_n
-		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => 'X'); -- dq
-		sdram_dqm         : out   std_logic_vector(3 downto 0);                     -- dqm
-		sdram_ras_n       : out   std_logic;                                        -- ras_n
-		sdram_we_n        : out   std_logic;                                        -- we_n
-		switches_export   : in    std_logic_vector(17 downto 0) := (others => 'X')  -- export
 	);
 	end component;
 		
@@ -137,8 +119,8 @@ architecture rtl of headbang_bot is
 	component beat_detection is port
 	(
 		clk: in std_logic;
-		first_channel: in std_logic_vector(15 downto 0);
-		last_channel: in std_logic_vector(15 downto 0);
+		first_channel_above_treshold: in std_logic;
+		last_channel_above_treshold: in std_logic;
 		headbang: out std_logic
 	);
 	end component;
@@ -150,6 +132,37 @@ architecture rtl of headbang_bot is
 		clko: out std_logic
 	);
 	end component;
+	
+	component audioqsys_simplified is port
+	(
+		clk_clk: in  std_logic := '0';
+		switches_export: in std_logic_vector(17 downto 0) := (others => '0');
+		audio_mute_export: out std_logic;
+		enable_beat_detection_export: out std_logic
+	);
+	end component;
+
+--	component audioqsys is port
+--	(
+--		adc_lr_clk_export: in    std_logic;
+--		aud_dat_export: in    std_logic_vector(31 downto 0);
+--		clk_clk: in    std_logic                     := 'X';
+--		green_leds_export: out   std_logic_vector(8 downto 0);
+--		red_leds_export: out   std_logic_vector(17 downto 0);
+--		sdram_addr: out   std_logic_vector(12 downto 0);
+--		sdram_ba: out   std_logic_vector(1 downto 0);
+--		sdram_cas_n: out   std_logic;
+--		sdram_cke: out   std_logic;
+--		sdram_cs_n: out   std_logic;
+--		sdram_dq: inout std_logic_vector(31 downto 0) := (others => 'X');
+--		sdram_dqm: out   std_logic_vector(3 downto 0);
+--		sdram_ras_n: out   std_logic;
+--		sdram_we_n: out   std_logic;
+--		switches_export: in    std_logic_vector(17 downto 0) := (others => 'X');
+--		enable_headbang_export: out std_logic;
+--		soft_mute_export: out std_logic
+--	);
+--	end component;
 	
 --	component fft is port
 --	(
@@ -174,7 +187,7 @@ architecture rtl of headbang_bot is
 --		fftpts_out: out std_logic_vector(11 downto 0)
 --	);
 --	end component;
---	
+
 --	component fft_control is port
 --	(
 --		clk: in std_logic;
@@ -184,28 +197,6 @@ architecture rtl of headbang_bot is
 --		reset_n: out std_logic
 --	);
 --	end component;
-	
---	component audioqsys is port
---	(
---		audio_ADCDAT: in std_logic := '0';
---		audio_ADCLRCK: in std_logic := '0';
---		audio_BCLK: in std_logic := '0';
---		audio_DACDAT: out std_logic;
---		audio_DACLRCK: in std_logic := '0';
---		clk_clk: in std_logic := '0';
---		leds_export: out std_logic_vector(17 downto 0);
---		sdram_addr: out std_logic_vector(12 downto 0);
---		sdram_ba: out std_logic_vector(1 downto 0);
---		sdram_cas_n: out std_logic;
---		sdram_cke: out std_logic;
---		sdram_cs_n: out std_logic;
---		sdram_dq: inout std_logic_vector(31 downto 0) := (others => '0');
---		sdram_dqm: out std_logic_vector(3 downto 0);
---		sdram_ras_n: out std_logic;
---		sdram_we_n: out std_logic;
---		switches_export: in std_logic_vector(17 downto 0) := (others => '0')
---	);
---	end component;
 
 begin
 
@@ -213,7 +204,8 @@ begin
 	AUD_BCLK <= bclk;
 	AUD_ADCLRCK <= adc_lr_clk; -- aud_adc_lr_ck;
 	AUD_DACLRCK <= dac_lr_clk;
-	direction_servo <= 2 when (headbang = '1') else 1;
+	direction_servo <= 2 when (headbang = '1' and enable_headbang = '1') else 1;
+	
 	LEDG(8) <= above_treshold;
 	LEDG(0) <= headbang;
 	
@@ -221,7 +213,7 @@ begin
 	(
 		clk => CLOCK_50,
 		reset => KEY(0),
-		play => SW(0),
+		play => soft_mute,
 		SDIN => I2C_SDAT,
 		SCLK => I2C_SCLK,
 		USB_clk => AUD_XCK,
@@ -231,7 +223,7 @@ begin
 		DAC_DATA => dac_data,
 		ADC_DATA => AUD_ADCDAT,
 		ADC_DATA_Combined => aud_adc_data
-		--ACK_LEDR => LEDR(2 downto 0)
+--		ACK_LEDR => LEDR(2 downto 0)
 	);
 	
 	adc_buffer_instance: adc_buffer port map
@@ -243,17 +235,23 @@ begin
 		last_channel_out => last_channel
 	);
 	
-	amplitude_visualiser_instance: amplitude_visualiser port map
+	amplitude_visualiser_first_channel: amplitude_visualiser port map
 	(
 		amplitude_value => first_channel,
-		above_treshold => above_treshold
+		above_treshold => above_treshold_first_channel
+	);
+	
+	amplitude_visualiser_second_channel: amplitude_visualiser port map
+	(
+		amplitude_value => last_channel,
+		above_treshold => above_treshold_last_channel
 	);
 	
 	beat_detection_instance: beat_detection port map
 	(
 		clk => adc_lr_clk,
-		first_channel => first_channel,
-		last_channel => last_channel,
+		first_channel_above_treshold => above_treshold_first_channel,
+		last_channel_above_treshold => above_treshold_last_channel,
 		headbang => headbang
 	);
 
@@ -263,6 +261,35 @@ begin
 		direction  => direction_servo,
 		clko => GPIO(0)
 	);
+	
+	audioqsys_simplified_instance: audioqsys_simplified port map
+	(
+		clk_clk => CLOCK_50,
+		switches_export => SW,
+		audio_mute_export => soft_mute,
+		enable_beat_detection_export => enable_headbang
+	);
+	
+--	audio_qsys: audioqsys port map
+--	(
+--		clk_clk => CLOCK_50,
+--		red_leds_export => LEDR,
+--		green_leds_export => LEDG,
+--		switches_export => SW,
+--		sdram_addr => DRAM_ADDR,
+--		sdram_ba => DRAM_BA,
+--		sdram_cas_n => DRAM_CAS_N,
+--		sdram_cke => DRAM_CKE,
+--		sdram_cs_n => DRAM_CS_N,
+--		sdram_dq => DRAM_DQ,
+--		sdram_dqm => DRAM_DQM,
+--		sdram_ras_n => DRAM_RAS_N,
+--		sdram_we_n => DRAM_WE_N,
+--		aud_dat_export => aud_adc_data,
+--		adc_lr_clk_export => aud_adc_lr_ck,
+--		enable_headbang_export => enable_headbang,
+--		soft_mute_export => soft_mute
+--	);
 	
 --	fft_control_instance: fft_control port map
 --	(
@@ -342,25 +369,6 @@ begin
 --		chip_select_n => SRAM_CE_N,
 --		ub_n => SRAM_UB_N,
 --		lb_n => SRAM_LB_N 
---	);
-
---	audio_qsys: audioqsys port map
---	(
---		clk_clk => CLOCK_50,
---		red_leds_export => LEDR,
---		switches_export => SW,
---		sdram_addr => DRAM_ADDR,
---		sdram_ba => DRAM_BA,
---		sdram_cas_n => DRAM_CAS_N,
---		sdram_cke => DRAM_CKE,
---		sdram_cs_n => DRAM_CS_N,
---		sdram_dq => DRAM_DQ,
---		sdram_dqm => DRAM_DQM,
---		sdram_ras_n => DRAM_RAS_N,
---		sdram_we_n => DRAM_WE_N,
---		aud_dat_export   => aud_adc_data,
---		adc_lr_clk_export => aud_adc_lr_ck,
---		green_leds_export => LEDG
 --	);
 	
 --	sdram_pll: entity work.sdram_pll port map

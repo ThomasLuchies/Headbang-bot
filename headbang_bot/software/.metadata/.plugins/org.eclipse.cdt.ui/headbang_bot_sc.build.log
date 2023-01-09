@@ -1,0 +1,9 @@
+13:04:10 **** Incremental Build of configuration Nios II for project headbang_bot_sc ****
+make all 
+Info: Building ../headbang_bot_sc_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../headbang_bot_sc_bsp/
+[BSP build complete]
+[headbang_bot_sc build complete]
+
+13:04:11 Build Finished (took 546ms)
+

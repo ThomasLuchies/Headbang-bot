@@ -8,21 +8,23 @@ use IEEE.numeric_std.all;
 
 entity audioqsys is
 	port (
-		adc_lr_clk_export : in    std_logic                     := '0';             -- adc_lr_clk.export
-		aud_dat_export    : in    std_logic_vector(31 downto 0) := (others => '0'); --    aud_dat.export
-		clk_clk           : in    std_logic                     := '0';             --        clk.clk
-		green_leds_export : out   std_logic_vector(8 downto 0);                     -- green_leds.export
-		red_leds_export   : out   std_logic_vector(17 downto 0);                    --   red_leds.export
-		sdram_addr        : out   std_logic_vector(12 downto 0);                    --      sdram.addr
-		sdram_ba          : out   std_logic_vector(1 downto 0);                     --           .ba
-		sdram_cas_n       : out   std_logic;                                        --           .cas_n
-		sdram_cke         : out   std_logic;                                        --           .cke
-		sdram_cs_n        : out   std_logic;                                        --           .cs_n
-		sdram_dq          : inout std_logic_vector(31 downto 0) := (others => '0'); --           .dq
-		sdram_dqm         : out   std_logic_vector(3 downto 0);                     --           .dqm
-		sdram_ras_n       : out   std_logic;                                        --           .ras_n
-		sdram_we_n        : out   std_logic;                                        --           .we_n
-		switches_export   : in    std_logic_vector(17 downto 0) := (others => '0')  --   switches.export
+		adc_lr_clk_export      : in    std_logic                     := '0';             --      adc_lr_clk.export
+		aud_dat_export         : in    std_logic_vector(31 downto 0) := (others => '0'); --         aud_dat.export
+		clk_clk                : in    std_logic                     := '0';             --             clk.clk
+		enable_headbang_export : out   std_logic;                                        -- enable_headbang.export
+		green_leds_export      : out   std_logic_vector(8 downto 0);                     --      green_leds.export
+		red_leds_export        : out   std_logic_vector(17 downto 0);                    --        red_leds.export
+		sdram_addr             : out   std_logic_vector(12 downto 0);                    --           sdram.addr
+		sdram_ba               : out   std_logic_vector(1 downto 0);                     --                .ba
+		sdram_cas_n            : out   std_logic;                                        --                .cas_n
+		sdram_cke              : out   std_logic;                                        --                .cke
+		sdram_cs_n             : out   std_logic;                                        --                .cs_n
+		sdram_dq               : inout std_logic_vector(31 downto 0) := (others => '0'); --                .dq
+		sdram_dqm              : out   std_logic_vector(3 downto 0);                     --                .dqm
+		sdram_ras_n            : out   std_logic;                                        --                .ras_n
+		sdram_we_n             : out   std_logic;                                        --                .we_n
+		soft_mute_export       : out   std_logic;                                        --       soft_mute.export
+		switches_export        : in    std_logic_vector(17 downto 0) := (others => '0')  --        switches.export
 	);
 end entity audioqsys;
 
@@ -46,6 +48,19 @@ architecture rtl of audioqsys is
 			in_port  : in  std_logic_vector(31 downto 0) := (others => 'X')  -- export
 		);
 	end component audioqsys_AUD_DAT;
+
+	component audioqsys_ENABLE_HEADBANG is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			out_port   : out std_logic                                         -- export
+		);
+	end component audioqsys_ENABLE_HEADBANG;
 
 	component audioqsys_green_leds is
 		port (
@@ -174,6 +189,7 @@ architecture rtl of audioqsys is
 		port (
 			clk_0_clk_clk                                : in  std_logic                     := 'X';             -- clk
 			nios2_gen2_reset_reset_bridge_in_reset_reset : in  std_logic                     := 'X';             -- reset
+			SOFT_MUTE_reset_reset_bridge_in_reset_reset  : in  std_logic                     := 'X';             -- reset
 			nios2_gen2_data_master_address               : in  std_logic_vector(27 downto 0) := (others => 'X'); -- address
 			nios2_gen2_data_master_waitrequest           : out std_logic;                                        -- waitrequest
 			nios2_gen2_data_master_byteenable            : in  std_logic_vector(3 downto 0)  := (others => 'X'); -- byteenable
@@ -190,6 +206,11 @@ architecture rtl of audioqsys is
 			ADC_LR_CLK_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			AUD_DAT_s1_address                           : out std_logic_vector(1 downto 0);                     -- address
 			AUD_DAT_s1_readdata                          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			ENABLE_HEADBANG_s1_address                   : out std_logic_vector(1 downto 0);                     -- address
+			ENABLE_HEADBANG_s1_write                     : out std_logic;                                        -- write
+			ENABLE_HEADBANG_s1_readdata                  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			ENABLE_HEADBANG_s1_writedata                 : out std_logic_vector(31 downto 0);                    -- writedata
+			ENABLE_HEADBANG_s1_chipselect                : out std_logic;                                        -- chipselect
 			green_leds_s1_address                        : out std_logic_vector(1 downto 0);                     -- address
 			green_leds_s1_write                          : out std_logic;                                        -- write
 			green_leds_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
@@ -231,6 +252,11 @@ architecture rtl of audioqsys is
 			sdram_s1_readdatavalid                       : in  std_logic                     := 'X';             -- readdatavalid
 			sdram_s1_waitrequest                         : in  std_logic                     := 'X';             -- waitrequest
 			sdram_s1_chipselect                          : out std_logic;                                        -- chipselect
+			SOFT_MUTE_s1_address                         : out std_logic_vector(1 downto 0);                     -- address
+			SOFT_MUTE_s1_write                           : out std_logic;                                        -- write
+			SOFT_MUTE_s1_readdata                        : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			SOFT_MUTE_s1_writedata                       : out std_logic_vector(31 downto 0);                    -- writedata
+			SOFT_MUTE_s1_chipselect                      : out std_logic;                                        -- chipselect
 			switches_s1_address                          : out std_logic_vector(1 downto 0);                     -- address
 			switches_s1_readdata                         : in  std_logic_vector(31 downto 0) := (others => 'X')  -- readdata
 		);
@@ -245,7 +271,7 @@ architecture rtl of audioqsys is
 		);
 	end component audioqsys_irq_mapper;
 
-	component altera_reset_controller is
+	component audioqsys_rst_controller is
 		generic (
 			NUM_RESET_INPUTS          : integer := 6;
 			OUTPUT_RESET_SYNC_EDGES   : string  := "deassert";
@@ -273,45 +299,111 @@ architecture rtl of audioqsys is
 			ADAPT_RESET_REQUEST       : integer := 0
 		);
 		port (
-			reset_in0      : in  std_logic := 'X'; -- reset
-			reset_in1      : in  std_logic := 'X'; -- reset
-			clk            : in  std_logic := 'X'; -- clk
-			reset_out      : out std_logic;        -- reset
-			reset_req      : out std_logic;        -- reset_req
-			reset_req_in0  : in  std_logic := 'X'; -- reset_req
-			reset_req_in1  : in  std_logic := 'X'; -- reset_req
-			reset_in2      : in  std_logic := 'X'; -- reset
-			reset_req_in2  : in  std_logic := 'X'; -- reset_req
-			reset_in3      : in  std_logic := 'X'; -- reset
-			reset_req_in3  : in  std_logic := 'X'; -- reset_req
-			reset_in4      : in  std_logic := 'X'; -- reset
-			reset_req_in4  : in  std_logic := 'X'; -- reset_req
-			reset_in5      : in  std_logic := 'X'; -- reset
-			reset_req_in5  : in  std_logic := 'X'; -- reset_req
-			reset_in6      : in  std_logic := 'X'; -- reset
-			reset_req_in6  : in  std_logic := 'X'; -- reset_req
-			reset_in7      : in  std_logic := 'X'; -- reset
-			reset_req_in7  : in  std_logic := 'X'; -- reset_req
-			reset_in8      : in  std_logic := 'X'; -- reset
-			reset_req_in8  : in  std_logic := 'X'; -- reset_req
-			reset_in9      : in  std_logic := 'X'; -- reset
-			reset_req_in9  : in  std_logic := 'X'; -- reset_req
-			reset_in10     : in  std_logic := 'X'; -- reset
-			reset_req_in10 : in  std_logic := 'X'; -- reset_req
-			reset_in11     : in  std_logic := 'X'; -- reset
-			reset_req_in11 : in  std_logic := 'X'; -- reset_req
-			reset_in12     : in  std_logic := 'X'; -- reset
-			reset_req_in12 : in  std_logic := 'X'; -- reset_req
-			reset_in13     : in  std_logic := 'X'; -- reset
-			reset_req_in13 : in  std_logic := 'X'; -- reset_req
-			reset_in14     : in  std_logic := 'X'; -- reset
-			reset_req_in14 : in  std_logic := 'X'; -- reset_req
-			reset_in15     : in  std_logic := 'X'; -- reset
-			reset_req_in15 : in  std_logic := 'X'  -- reset_req
+			reset_in0      : in  std_logic := 'X'; -- reset_in0.reset
+			reset_in1      : in  std_logic := 'X'; -- reset_in1.reset
+			clk            : in  std_logic := 'X'; --       clk.clk
+			reset_out      : out std_logic;        -- reset_out.reset
+			reset_req      : out std_logic;        --          .reset_req
+			reset_in10     : in  std_logic := 'X';
+			reset_in11     : in  std_logic := 'X';
+			reset_in12     : in  std_logic := 'X';
+			reset_in13     : in  std_logic := 'X';
+			reset_in14     : in  std_logic := 'X';
+			reset_in15     : in  std_logic := 'X';
+			reset_in2      : in  std_logic := 'X';
+			reset_in3      : in  std_logic := 'X';
+			reset_in4      : in  std_logic := 'X';
+			reset_in5      : in  std_logic := 'X';
+			reset_in6      : in  std_logic := 'X';
+			reset_in7      : in  std_logic := 'X';
+			reset_in8      : in  std_logic := 'X';
+			reset_in9      : in  std_logic := 'X';
+			reset_req_in0  : in  std_logic := 'X';
+			reset_req_in1  : in  std_logic := 'X';
+			reset_req_in10 : in  std_logic := 'X';
+			reset_req_in11 : in  std_logic := 'X';
+			reset_req_in12 : in  std_logic := 'X';
+			reset_req_in13 : in  std_logic := 'X';
+			reset_req_in14 : in  std_logic := 'X';
+			reset_req_in15 : in  std_logic := 'X';
+			reset_req_in2  : in  std_logic := 'X';
+			reset_req_in3  : in  std_logic := 'X';
+			reset_req_in4  : in  std_logic := 'X';
+			reset_req_in5  : in  std_logic := 'X';
+			reset_req_in6  : in  std_logic := 'X';
+			reset_req_in7  : in  std_logic := 'X';
+			reset_req_in8  : in  std_logic := 'X';
+			reset_req_in9  : in  std_logic := 'X'
 		);
-	end component altera_reset_controller;
+	end component audioqsys_rst_controller;
 
-	signal nios2_gen2_debug_reset_request_reset                          : std_logic;                     -- nios2_gen2:debug_reset_request -> [rst_controller:reset_in0, rst_controller:reset_in1]
+	component audioqsys_rst_controller_001 is
+		generic (
+			NUM_RESET_INPUTS          : integer := 6;
+			OUTPUT_RESET_SYNC_EDGES   : string  := "deassert";
+			SYNC_DEPTH                : integer := 2;
+			RESET_REQUEST_PRESENT     : integer := 0;
+			RESET_REQ_WAIT_TIME       : integer := 1;
+			MIN_RST_ASSERTION_TIME    : integer := 3;
+			RESET_REQ_EARLY_DSRT_TIME : integer := 1;
+			USE_RESET_REQUEST_IN0     : integer := 0;
+			USE_RESET_REQUEST_IN1     : integer := 0;
+			USE_RESET_REQUEST_IN2     : integer := 0;
+			USE_RESET_REQUEST_IN3     : integer := 0;
+			USE_RESET_REQUEST_IN4     : integer := 0;
+			USE_RESET_REQUEST_IN5     : integer := 0;
+			USE_RESET_REQUEST_IN6     : integer := 0;
+			USE_RESET_REQUEST_IN7     : integer := 0;
+			USE_RESET_REQUEST_IN8     : integer := 0;
+			USE_RESET_REQUEST_IN9     : integer := 0;
+			USE_RESET_REQUEST_IN10    : integer := 0;
+			USE_RESET_REQUEST_IN11    : integer := 0;
+			USE_RESET_REQUEST_IN12    : integer := 0;
+			USE_RESET_REQUEST_IN13    : integer := 0;
+			USE_RESET_REQUEST_IN14    : integer := 0;
+			USE_RESET_REQUEST_IN15    : integer := 0;
+			ADAPT_RESET_REQUEST       : integer := 0
+		);
+		port (
+			reset_in0      : in  std_logic := 'X'; -- reset_in0.reset
+			clk            : in  std_logic := 'X'; --       clk.clk
+			reset_out      : out std_logic;        -- reset_out.reset
+			reset_in1      : in  std_logic := 'X';
+			reset_in10     : in  std_logic := 'X';
+			reset_in11     : in  std_logic := 'X';
+			reset_in12     : in  std_logic := 'X';
+			reset_in13     : in  std_logic := 'X';
+			reset_in14     : in  std_logic := 'X';
+			reset_in15     : in  std_logic := 'X';
+			reset_in2      : in  std_logic := 'X';
+			reset_in3      : in  std_logic := 'X';
+			reset_in4      : in  std_logic := 'X';
+			reset_in5      : in  std_logic := 'X';
+			reset_in6      : in  std_logic := 'X';
+			reset_in7      : in  std_logic := 'X';
+			reset_in8      : in  std_logic := 'X';
+			reset_in9      : in  std_logic := 'X';
+			reset_req      : out std_logic;
+			reset_req_in0  : in  std_logic := 'X';
+			reset_req_in1  : in  std_logic := 'X';
+			reset_req_in10 : in  std_logic := 'X';
+			reset_req_in11 : in  std_logic := 'X';
+			reset_req_in12 : in  std_logic := 'X';
+			reset_req_in13 : in  std_logic := 'X';
+			reset_req_in14 : in  std_logic := 'X';
+			reset_req_in15 : in  std_logic := 'X';
+			reset_req_in2  : in  std_logic := 'X';
+			reset_req_in3  : in  std_logic := 'X';
+			reset_req_in4  : in  std_logic := 'X';
+			reset_req_in5  : in  std_logic := 'X';
+			reset_req_in6  : in  std_logic := 'X';
+			reset_req_in7  : in  std_logic := 'X';
+			reset_req_in8  : in  std_logic := 'X';
+			reset_req_in9  : in  std_logic := 'X'
+		);
+	end component audioqsys_rst_controller_001;
+
+	signal nios2_gen2_debug_reset_request_reset                          : std_logic;                     -- nios2_gen2:debug_reset_request -> [rst_controller:reset_in0, rst_controller:reset_in1, rst_controller_001:reset_in0]
 	signal nios2_gen2_data_master_readdata                               : std_logic_vector(31 downto 0); -- mm_interconnect_0:nios2_gen2_data_master_readdata -> nios2_gen2:d_readdata
 	signal nios2_gen2_data_master_waitrequest                            : std_logic;                     -- mm_interconnect_0:nios2_gen2_data_master_waitrequest -> nios2_gen2:d_waitrequest
 	signal nios2_gen2_data_master_debugaccess                            : std_logic;                     -- nios2_gen2:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:nios2_gen2_data_master_debugaccess
@@ -371,10 +463,21 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_aud_dat_s1_address                          : std_logic_vector(1 downto 0);  -- mm_interconnect_0:AUD_DAT_s1_address -> AUD_DAT:address
 	signal mm_interconnect_0_adc_lr_clk_s1_readdata                      : std_logic_vector(31 downto 0); -- ADC_LR_CLK:readdata -> mm_interconnect_0:ADC_LR_CLK_s1_readdata
 	signal mm_interconnect_0_adc_lr_clk_s1_address                       : std_logic_vector(1 downto 0);  -- mm_interconnect_0:ADC_LR_CLK_s1_address -> ADC_LR_CLK:address
+	signal mm_interconnect_0_enable_headbang_s1_chipselect               : std_logic;                     -- mm_interconnect_0:ENABLE_HEADBANG_s1_chipselect -> ENABLE_HEADBANG:chipselect
+	signal mm_interconnect_0_enable_headbang_s1_readdata                 : std_logic_vector(31 downto 0); -- ENABLE_HEADBANG:readdata -> mm_interconnect_0:ENABLE_HEADBANG_s1_readdata
+	signal mm_interconnect_0_enable_headbang_s1_address                  : std_logic_vector(1 downto 0);  -- mm_interconnect_0:ENABLE_HEADBANG_s1_address -> ENABLE_HEADBANG:address
+	signal mm_interconnect_0_enable_headbang_s1_write                    : std_logic;                     -- mm_interconnect_0:ENABLE_HEADBANG_s1_write -> mm_interconnect_0_enable_headbang_s1_write:in
+	signal mm_interconnect_0_enable_headbang_s1_writedata                : std_logic_vector(31 downto 0); -- mm_interconnect_0:ENABLE_HEADBANG_s1_writedata -> ENABLE_HEADBANG:writedata
+	signal mm_interconnect_0_soft_mute_s1_chipselect                     : std_logic;                     -- mm_interconnect_0:SOFT_MUTE_s1_chipselect -> SOFT_MUTE:chipselect
+	signal mm_interconnect_0_soft_mute_s1_readdata                       : std_logic_vector(31 downto 0); -- SOFT_MUTE:readdata -> mm_interconnect_0:SOFT_MUTE_s1_readdata
+	signal mm_interconnect_0_soft_mute_s1_address                        : std_logic_vector(1 downto 0);  -- mm_interconnect_0:SOFT_MUTE_s1_address -> SOFT_MUTE:address
+	signal mm_interconnect_0_soft_mute_s1_write                          : std_logic;                     -- mm_interconnect_0:SOFT_MUTE_s1_write -> mm_interconnect_0_soft_mute_s1_write:in
+	signal mm_interconnect_0_soft_mute_s1_writedata                      : std_logic_vector(31 downto 0); -- mm_interconnect_0:SOFT_MUTE_s1_writedata -> SOFT_MUTE:writedata
 	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver0_irq
 	signal nios2_gen2_irq_irq                                            : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> nios2_gen2:irq
 	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [irq_mapper:reset, mm_interconnect_0:nios2_gen2_reset_reset_bridge_in_reset_reset, onchip_memory2:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
 	signal rst_controller_reset_out_reset_req                            : std_logic;                     -- rst_controller:reset_req -> [nios2_gen2:reset_req, onchip_memory2:reset_req, rst_translator:reset_req_in]
+	signal rst_controller_001_reset_out_reset                            : std_logic;                     -- rst_controller_001:reset_out -> [mm_interconnect_0:SOFT_MUTE_reset_reset_bridge_in_reset_reset, rst_controller_001_reset_out_reset:in]
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read_ports_inv  : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:inv -> jtag_uart:av_read_n
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:inv -> jtag_uart:av_write_n
 	signal mm_interconnect_0_red_leds_s1_write_ports_inv                 : std_logic;                     -- mm_interconnect_0_red_leds_s1_write:inv -> red_leds:write_n
@@ -382,7 +485,10 @@ architecture rtl of audioqsys is
 	signal mm_interconnect_0_sdram_s1_byteenable_ports_inv               : std_logic_vector(3 downto 0);  -- mm_interconnect_0_sdram_s1_byteenable:inv -> sdram:az_be_n
 	signal mm_interconnect_0_sdram_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_sdram_s1_write:inv -> sdram:az_wr_n
 	signal mm_interconnect_0_green_leds_s1_write_ports_inv               : std_logic;                     -- mm_interconnect_0_green_leds_s1_write:inv -> green_leds:write_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [ADC_LR_CLK:reset_n, AUD_DAT:reset_n, green_leds:reset_n, jtag_uart:rst_n, nios2_gen2:reset_n, red_leds:reset_n, sdram:reset_n, switches:reset_n]
+	signal mm_interconnect_0_enable_headbang_s1_write_ports_inv          : std_logic;                     -- mm_interconnect_0_enable_headbang_s1_write:inv -> ENABLE_HEADBANG:write_n
+	signal mm_interconnect_0_soft_mute_s1_write_ports_inv                : std_logic;                     -- mm_interconnect_0_soft_mute_s1_write:inv -> SOFT_MUTE:write_n
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [ADC_LR_CLK:reset_n, AUD_DAT:reset_n, ENABLE_HEADBANG:reset_n, green_leds:reset_n, jtag_uart:rst_n, nios2_gen2:reset_n, red_leds:reset_n, sdram:reset_n, switches:reset_n]
+	signal rst_controller_001_reset_out_reset_ports_inv                  : std_logic;                     -- rst_controller_001_reset_out_reset:inv -> SOFT_MUTE:reset_n
 
 begin
 
@@ -402,6 +508,30 @@ begin
 			address  => mm_interconnect_0_aud_dat_s1_address,     --                  s1.address
 			readdata => mm_interconnect_0_aud_dat_s1_readdata,    --                    .readdata
 			in_port  => aud_dat_export                            -- external_connection.export
+		);
+
+	enable_headbang : component audioqsys_ENABLE_HEADBANG
+		port map (
+			clk        => clk_clk,                                              --                 clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,             --               reset.reset_n
+			address    => mm_interconnect_0_enable_headbang_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_enable_headbang_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_enable_headbang_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_enable_headbang_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_enable_headbang_s1_readdata,        --                    .readdata
+			out_port   => enable_headbang_export                                -- external_connection.export
+		);
+
+	soft_mute : component audioqsys_ENABLE_HEADBANG
+		port map (
+			clk        => clk_clk,                                        --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv,   --               reset.reset_n
+			address    => mm_interconnect_0_soft_mute_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_soft_mute_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_soft_mute_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_soft_mute_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_soft_mute_s1_readdata,        --                    .readdata
+			out_port   => soft_mute_export                                -- external_connection.export
 		);
 
 	green_leds : component audioqsys_green_leds
@@ -524,6 +654,7 @@ begin
 		port map (
 			clk_0_clk_clk                                => clk_clk,                                                   --                              clk_0_clk.clk
 			nios2_gen2_reset_reset_bridge_in_reset_reset => rst_controller_reset_out_reset,                            -- nios2_gen2_reset_reset_bridge_in_reset.reset
+			SOFT_MUTE_reset_reset_bridge_in_reset_reset  => rst_controller_001_reset_out_reset,                        --  SOFT_MUTE_reset_reset_bridge_in_reset.reset
 			nios2_gen2_data_master_address               => nios2_gen2_data_master_address,                            --                 nios2_gen2_data_master.address
 			nios2_gen2_data_master_waitrequest           => nios2_gen2_data_master_waitrequest,                        --                                       .waitrequest
 			nios2_gen2_data_master_byteenable            => nios2_gen2_data_master_byteenable,                         --                                       .byteenable
@@ -540,6 +671,11 @@ begin
 			ADC_LR_CLK_s1_readdata                       => mm_interconnect_0_adc_lr_clk_s1_readdata,                  --                                       .readdata
 			AUD_DAT_s1_address                           => mm_interconnect_0_aud_dat_s1_address,                      --                             AUD_DAT_s1.address
 			AUD_DAT_s1_readdata                          => mm_interconnect_0_aud_dat_s1_readdata,                     --                                       .readdata
+			ENABLE_HEADBANG_s1_address                   => mm_interconnect_0_enable_headbang_s1_address,              --                     ENABLE_HEADBANG_s1.address
+			ENABLE_HEADBANG_s1_write                     => mm_interconnect_0_enable_headbang_s1_write,                --                                       .write
+			ENABLE_HEADBANG_s1_readdata                  => mm_interconnect_0_enable_headbang_s1_readdata,             --                                       .readdata
+			ENABLE_HEADBANG_s1_writedata                 => mm_interconnect_0_enable_headbang_s1_writedata,            --                                       .writedata
+			ENABLE_HEADBANG_s1_chipselect                => mm_interconnect_0_enable_headbang_s1_chipselect,           --                                       .chipselect
 			green_leds_s1_address                        => mm_interconnect_0_green_leds_s1_address,                   --                          green_leds_s1.address
 			green_leds_s1_write                          => mm_interconnect_0_green_leds_s1_write,                     --                                       .write
 			green_leds_s1_readdata                       => mm_interconnect_0_green_leds_s1_readdata,                  --                                       .readdata
@@ -581,6 +717,11 @@ begin
 			sdram_s1_readdatavalid                       => mm_interconnect_0_sdram_s1_readdatavalid,                  --                                       .readdatavalid
 			sdram_s1_waitrequest                         => mm_interconnect_0_sdram_s1_waitrequest,                    --                                       .waitrequest
 			sdram_s1_chipselect                          => mm_interconnect_0_sdram_s1_chipselect,                     --                                       .chipselect
+			SOFT_MUTE_s1_address                         => mm_interconnect_0_soft_mute_s1_address,                    --                           SOFT_MUTE_s1.address
+			SOFT_MUTE_s1_write                           => mm_interconnect_0_soft_mute_s1_write,                      --                                       .write
+			SOFT_MUTE_s1_readdata                        => mm_interconnect_0_soft_mute_s1_readdata,                   --                                       .readdata
+			SOFT_MUTE_s1_writedata                       => mm_interconnect_0_soft_mute_s1_writedata,                  --                                       .writedata
+			SOFT_MUTE_s1_chipselect                      => mm_interconnect_0_soft_mute_s1_chipselect,                 --                                       .chipselect
 			switches_s1_address                          => mm_interconnect_0_switches_s1_address,                     --                            switches_s1.address
 			switches_s1_readdata                         => mm_interconnect_0_switches_s1_readdata                     --                                       .readdata
 		);
@@ -593,7 +734,7 @@ begin
 			sender_irq    => nios2_gen2_irq_irq              --    sender.irq
 		);
 
-	rst_controller : component altera_reset_controller
+	rst_controller : component audioqsys_rst_controller
 		generic map (
 			NUM_RESET_INPUTS          => 2,
 			OUTPUT_RESET_SYNC_EDGES   => "deassert",
@@ -658,6 +799,71 @@ begin
 			reset_req_in15 => '0'                                   -- (terminated)
 		);
 
+	rst_controller_001 : component audioqsys_rst_controller_001
+		generic map (
+			NUM_RESET_INPUTS          => 1,
+			OUTPUT_RESET_SYNC_EDGES   => "deassert",
+			SYNC_DEPTH                => 2,
+			RESET_REQUEST_PRESENT     => 0,
+			RESET_REQ_WAIT_TIME       => 1,
+			MIN_RST_ASSERTION_TIME    => 3,
+			RESET_REQ_EARLY_DSRT_TIME => 1,
+			USE_RESET_REQUEST_IN0     => 0,
+			USE_RESET_REQUEST_IN1     => 0,
+			USE_RESET_REQUEST_IN2     => 0,
+			USE_RESET_REQUEST_IN3     => 0,
+			USE_RESET_REQUEST_IN4     => 0,
+			USE_RESET_REQUEST_IN5     => 0,
+			USE_RESET_REQUEST_IN6     => 0,
+			USE_RESET_REQUEST_IN7     => 0,
+			USE_RESET_REQUEST_IN8     => 0,
+			USE_RESET_REQUEST_IN9     => 0,
+			USE_RESET_REQUEST_IN10    => 0,
+			USE_RESET_REQUEST_IN11    => 0,
+			USE_RESET_REQUEST_IN12    => 0,
+			USE_RESET_REQUEST_IN13    => 0,
+			USE_RESET_REQUEST_IN14    => 0,
+			USE_RESET_REQUEST_IN15    => 0,
+			ADAPT_RESET_REQUEST       => 0
+		)
+		port map (
+			reset_in0      => nios2_gen2_debug_reset_request_reset, -- reset_in0.reset
+			clk            => clk_clk,                              --       clk.clk
+			reset_out      => rst_controller_001_reset_out_reset,   -- reset_out.reset
+			reset_req      => open,                                 -- (terminated)
+			reset_req_in0  => '0',                                  -- (terminated)
+			reset_in1      => '0',                                  -- (terminated)
+			reset_req_in1  => '0',                                  -- (terminated)
+			reset_in2      => '0',                                  -- (terminated)
+			reset_req_in2  => '0',                                  -- (terminated)
+			reset_in3      => '0',                                  -- (terminated)
+			reset_req_in3  => '0',                                  -- (terminated)
+			reset_in4      => '0',                                  -- (terminated)
+			reset_req_in4  => '0',                                  -- (terminated)
+			reset_in5      => '0',                                  -- (terminated)
+			reset_req_in5  => '0',                                  -- (terminated)
+			reset_in6      => '0',                                  -- (terminated)
+			reset_req_in6  => '0',                                  -- (terminated)
+			reset_in7      => '0',                                  -- (terminated)
+			reset_req_in7  => '0',                                  -- (terminated)
+			reset_in8      => '0',                                  -- (terminated)
+			reset_req_in8  => '0',                                  -- (terminated)
+			reset_in9      => '0',                                  -- (terminated)
+			reset_req_in9  => '0',                                  -- (terminated)
+			reset_in10     => '0',                                  -- (terminated)
+			reset_req_in10 => '0',                                  -- (terminated)
+			reset_in11     => '0',                                  -- (terminated)
+			reset_req_in11 => '0',                                  -- (terminated)
+			reset_in12     => '0',                                  -- (terminated)
+			reset_req_in12 => '0',                                  -- (terminated)
+			reset_in13     => '0',                                  -- (terminated)
+			reset_req_in13 => '0',                                  -- (terminated)
+			reset_in14     => '0',                                  -- (terminated)
+			reset_req_in14 => '0',                                  -- (terminated)
+			reset_in15     => '0',                                  -- (terminated)
+			reset_req_in15 => '0'                                   -- (terminated)
+		);
+
 	mm_interconnect_0_jtag_uart_avalon_jtag_slave_read_ports_inv <= not mm_interconnect_0_jtag_uart_avalon_jtag_slave_read;
 
 	mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv <= not mm_interconnect_0_jtag_uart_avalon_jtag_slave_write;
@@ -672,6 +878,12 @@ begin
 
 	mm_interconnect_0_green_leds_s1_write_ports_inv <= not mm_interconnect_0_green_leds_s1_write;
 
+	mm_interconnect_0_enable_headbang_s1_write_ports_inv <= not mm_interconnect_0_enable_headbang_s1_write;
+
+	mm_interconnect_0_soft_mute_s1_write_ports_inv <= not mm_interconnect_0_soft_mute_s1_write;
+
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
+
+	rst_controller_001_reset_out_reset_ports_inv <= not rst_controller_001_reset_out_reset;
 
 end architecture rtl; -- of audioqsys

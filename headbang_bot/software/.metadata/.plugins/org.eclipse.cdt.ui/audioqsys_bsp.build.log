@@ -1,6 +1,6 @@
-16:47:00 **** Incremental Build of configuration Nios II for project audioqsys_bsp ****
+11:45:11 **** Incremental Build of configuration Nios II for project audioqsys_bsp ****
 make all 
 [BSP build complete]
 
-16:47:00 Build Finished (took 652ms)
+11:45:12 Build Finished (took 467ms)
 

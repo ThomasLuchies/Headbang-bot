@@ -1,0 +1,6 @@
+12:45:24 **** Clean-only build of configuration Nios II for project headbang_bot_sc_bsp ****
+make clean 
+[BSP clean complete]
+
+12:45:24 Build Finished (took 459ms)
+

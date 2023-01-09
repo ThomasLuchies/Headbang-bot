@@ -1,9 +1,9 @@
-16:47:06 **** Incremental Build of configuration Nios II for project audioqsys ****
+12:43:46 **** Build of configuration Nios II for project audioqsys ****
 make all 
 Info: Building ../audioqsys_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../audioqsys_bsp/
 [BSP build complete]
 [audioqsys build complete]
 
-16:47:06 Build Finished (took 702ms)
+12:43:46 Build Finished (took 589ms)
 
