@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jan 6, 2023 3:52:42 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1673016762594</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\Users\Robin\Documents\GitHub\Headbang-bot\headbang_bot\software\audioqsys_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Jan 9, 2023 12:19:50 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1673263190025</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>D:\Vcs\Headbang-bot\headbang_bot\software\audioqsys_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\audioqsys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
@@ -903,6 +903,18 @@
                 <addressRange>0x00000000 - 0x07FFFFFF</addressRange>
                 <addressSpan>134217728</addressSpan>
                 <attributes>memory</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>SOFT_MUTE</slaveDescriptor>
+                <addressRange>0x08000000 - 0x0800000F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>ENABLE_HEADBANG</slaveDescriptor>
+                <addressRange>0x08000010 - 0x0800001F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>onchip_memory2</slaveDescriptor>
